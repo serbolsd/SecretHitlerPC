@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/CartasDePoliza.unity
+- path: Assets/Scenes/SesionLegislativa.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
