@@ -26,7 +26,7 @@ public class sesionLegislativa : MonoBehaviour
         switch (etapa)
         {
             case 0:
-                takeCardsFace();
+                takeCardsFase();
                 break;
             case 1:
                 PresidentSelection();
@@ -39,7 +39,7 @@ public class sesionLegislativa : MonoBehaviour
         }
     }
 
-    public void takeCardsFace()
+    public void takeCardsFase()
     {
         if(!faseAlready)
         {
