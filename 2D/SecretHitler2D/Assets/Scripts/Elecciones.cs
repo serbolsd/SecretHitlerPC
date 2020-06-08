@@ -65,11 +65,11 @@ public class Elecciones : MonoBehaviour
                 break;
 
             case 1:
-
+                 PhaseVotation();
                 break;
 
             case 2:
-
+                  WaitingNextTurn();
                 break;
 
             default:
@@ -108,10 +108,11 @@ public class Elecciones : MonoBehaviour
 
             return;
         }
+        g_currentPlayerTxt.GetComponent<Text>().text = g_iteratorPlayers.ToString();
 
         if (g_iteratorPlayers >= g_usuarios)
         {
-            
+            CountingVotes();
         }
     }
 
@@ -159,7 +160,8 @@ public class Elecciones : MonoBehaviour
     //Función para la selección de otro presidente
     void NextPresident()
     {
-        g_phase--;
+        g_phase=0;
+        g_isChancellor = false;
         g_isPhase = false;
 
         g_Players[g_idPresident].GetComponent<Jugador>().Cargo = 0;
@@ -229,7 +231,7 @@ public class Elecciones : MonoBehaviour
             for (int i = 0; i < 10; i++)
             {
                 //Solo es color del boton
-                if (i >= g_usuarios)
+                if (i < g_usuarios && i!=g_idPresident)
                 {
                     g_BtnPlayers[i].SetActive(true);
                     g_BtnPlayers[i].GetComponent<Button>().GetComponentInChildren<Text>().text = i.ToString();
@@ -266,7 +268,7 @@ public class Elecciones : MonoBehaviour
             for (int i = 0; i < 10; i++)
             {
                 //Solo es color del boton
-                if (i >= g_usuarios)
+                if (i < g_usuarios)
                 {
                     g_BtnPlayers[i].SetActive(false);
                     g_BtnPlayers[i].GetComponent<Button>().GetComponentInChildren<Text>().text = i.ToString();
