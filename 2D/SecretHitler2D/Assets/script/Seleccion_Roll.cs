@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
+using static afiliaciones;
 
 public class Seleccion_Roll : MonoBehaviour
 {
     public int[] idsRol;//0=liberal 1=fascista 2=hitler
     public int numPlayers = 0;
+    public afiliaciones aF;
     // Start is called before the first frame update
     void Start()
     {
-
         createRole();
     }
 
@@ -55,5 +56,6 @@ public class Seleccion_Roll : MonoBehaviour
             idsRol[i] = idsRol[r];
             idsRol[r] = tmp;
         }
+        aF.darAfiliacion();
     }
 }
