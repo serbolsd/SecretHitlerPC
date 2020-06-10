@@ -10,15 +10,19 @@ public class Elecciones : MonoBehaviour
     bool g_isChancellor = false;
     bool g_isPhase = false;
 
-    public int g_usuarios = 5;
+    int g_usuarios = 5;
     public int g_idPresident = 0;
+    public int g_idOldPresident = -1;
     public int g_idChancellor = 0;
+    public int g_idOldChancellor = -1;
     public int g_phase = 0; //0 = Elección, 1 = Votación, 2 = Espera sig turno
-    public int g_turnCount = 0;
-    public int g_noCount = 0;
-    public int g_iteratorPlayers = 0;
+    int g_turnCount = 0;
+    int g_noCount = 0;
+    int g_iteratorPlayers = 0;
 
     public int[] g_listPlayerVote; //Lista donde se van a agregar los si o no
+
+    public bool waitingNextTurn = false;
 
     public GameObject g_PrefabPlayer;
     public GameObject[] g_Players;
@@ -31,7 +35,7 @@ public class Elecciones : MonoBehaviour
 
     //Llamamos esta función cuando queramos y siempre será para el inicio
     //Reiniciar o pruebas
-    void OnStart()
+    public void OnStart()
     {
         //Crear y setearle un ID  a los jugadores
         g_Players = new GameObject[g_usuarios];
@@ -51,35 +55,56 @@ public class Elecciones : MonoBehaviour
     void Start()
     {
         //Inicializamos a los jugadores
-        OnStart();
+        //OnStart();
     }
 
     // Update is called once per frame
     void Update()
     {
-       switch (g_phase)
-        {
-
-            case 0:
-                PhaseElection();
-                break;
-
-            case 1:
-                 PhaseVotation();
-                break;
-
-            case 2:
-                  WaitingNextTurn();
-                break;
-
-            default:
-                break;
-        }
+       //switch (g_phase)
+       // {
+       //
+       //     case 0:
+       //         PhaseElection();
+       //         break;
+       //
+       //     case 1:
+       //          PhaseVotation();
+       //         break;
+       //
+       //     case 2:
+       //           //WaitingNextTurn();
+       //         break;
+       //
+       //     default:
+       //         break;
+       // }
     }
 
+  public void onUpdate()
+  {
+    switch (g_phase)
+    {
 
-    //Función de espera por turnos
-    void WaitingNextTurn()
+      case 0:
+        PhaseElection();
+        break;
+
+      case 1:
+        PhaseVotation();
+        break;
+
+      case 2:
+        //WaitingNextTurn();
+        waitingNextTurn = true;
+        break;
+
+      default:
+        break;
+    }
+  }
+  //Función de espera por turnos
+  void WaitingNextTurn()
     {
         if (!g_isPhase)
         {
@@ -142,7 +167,8 @@ public class Elecciones : MonoBehaviour
         else
         {
             g_phase++;
-
+            g_idOldPresident = g_idPresident;
+            g_idOldChancellor = g_idChancellor;
             //Hacemos visible los botones de selección e indicaremos quien es el que está escogiendo
             g_currentPlayerTxt.SetActive(false);
             g_BtnYes.SetActive(false);
@@ -231,7 +257,7 @@ public class Elecciones : MonoBehaviour
             for (int i = 0; i < 10; i++)
             {
                 //Solo es color del boton
-                if (i < g_usuarios && i!=g_idPresident)
+                if (i < g_usuarios && i!=g_idPresident && i!=g_idOldPresident&& i!=g_idOldChancellor)
                 {
                     g_BtnPlayers[i].SetActive(true);
                     g_BtnPlayers[i].GetComponent<Button>().GetComponentInChildren<Text>().text = i.ToString();
