@@ -533,8 +533,8 @@ MonoBehaviour:
   buttonPresidentCard1: {fileID: 380695486}
   buttonPresidentCard2: {fileID: 1015230256}
   buttonPresidentCard3: {fileID: 1954793500}
-  buttonCansillerCard1: {fileID: 380695486}
-  buttonCansillerCard2: {fileID: 1015230256}
+  buttonCansillerCard1: {fileID: 741106495}
+  buttonCansillerCard2: {fileID: 1668647071}
   baraja: {fileID: 138360794}
   waitingNextTurn: 0
 --- !u!1 &142312224
@@ -1186,6 +1186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4addde4c44f95e6429e527f3dedaf4ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  g_usuarios: 7
   g_idPresident: 0
   g_idOldPresident: -1
   g_idChancellor: 0
@@ -1546,6 +1547,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 673678223}
   m_CullTransparentMesh: 0
+--- !u!1 &741106495 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5928397040923109411, guid: e3cb3450fc27c4f45a3d6b8ae643ea45,
+    type: 3}
+  m_PrefabInstance: {fileID: 1697687870}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &770454439
 GameObject:
   m_ObjectHideFlags: 0
@@ -3061,6 +3068,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1645932876}
   m_CullTransparentMesh: 0
+--- !u!1 &1668647071 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5928397041136307427, guid: e3cb3450fc27c4f45a3d6b8ae643ea45,
+    type: 3}
+  m_PrefabInstance: {fileID: 1697687870}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1697687870
 PrefabInstance:
   m_ObjectHideFlags: 0

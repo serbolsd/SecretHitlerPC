@@ -10,7 +10,7 @@ public class Elecciones : MonoBehaviour
     bool g_isChancellor = false;
     bool g_isPhase = false;
 
-    int g_usuarios = 5;
+    public int g_usuarios = 5;
     public int g_idPresident = 0;
     public int g_idOldPresident = -1;
     public int g_idChancellor = 0;
