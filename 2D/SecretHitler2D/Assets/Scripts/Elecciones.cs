@@ -133,6 +133,7 @@ public class Elecciones : MonoBehaviour
 
             return;
         }
+        //Esto se cambiara a cada pantalla
         g_currentPlayerTxt.GetComponent<Text>().text = g_iteratorPlayers.ToString();
 
         if (g_iteratorPlayers >= g_usuarios)
