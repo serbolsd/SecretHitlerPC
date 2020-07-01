@@ -1,13 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+//using System.Diagnostics;
+using UnityEngine.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class Client : MonoBehaviour
 {
+ 
     const int Users = 5;
     const int Port = 26000;
     int HostId;
@@ -18,6 +22,7 @@ public class Client : MonoBehaviour
     byte error;
     const int BYTE_SIZE = 1024;
     int connectionid;
+
     #region Monobehaviour
     void Start()
     {
@@ -29,6 +34,14 @@ public class Client : MonoBehaviour
         UpdateMEssagePump();
     }
     #endregion
+    public void ChangeServerIP(InputField InputField)
+    {
+       
+        Debug.Log(ServerIP);
+        ServerIP = InputField.text;
+        Debug.Log(ServerIP);
+    }
+
     public void Init()
     {
         NetworkTransport.Init();
