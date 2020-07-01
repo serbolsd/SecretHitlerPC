@@ -8,6 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Client : MonoBehaviour
 {
@@ -15,15 +16,17 @@ public class Client : MonoBehaviour
     const int Users = 5;
     const int Port = 26000;
     int HostId;
-    string ServerIP = "127.0.0.1";
+    string ServerIP = "";
     const int Web = 26001;
     bool severStarted;
     private byte ReliableChannel;
     byte error;
     const int BYTE_SIZE = 1024;
     int connectionid;
-
+    bool lmao = false;
     #region Monobehaviour
+ public InputField lmaaao;
+    bool DoOnce = false;
     void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -31,33 +34,54 @@ public class Client : MonoBehaviour
     }
     public void Update()
     {
+       
+        
+        ChangeServerIP(lmaaao);
+       
         UpdateMEssagePump();
     }
     #endregion
     public void ChangeServerIP(InputField InputField)
     {
-       
-        Debug.Log(ServerIP);
-        ServerIP = InputField.text;
-        Debug.Log(ServerIP);
-    }
+        if(DoOnce==false)
+        {
+            if (Input.GetKey(KeyCode.Return ))
+            {
+                Debug.Log(ServerIP);
+                ServerIP = InputField.text;
+                DoOnce = true;
+                lmao = true;
+            }
+            if (lmao == true)
+            {
+                Debug.Log(ServerIP);
+                Debug.Log("DDOS Attack");
+            }
 
+            Init();
+        }
+      
+     
+    }
+ 
     public void Init()
     {
-        NetworkTransport.Init();
-        ConnectionConfig cc = new ConnectionConfig();
-        ReliableChannel = cc.AddChannel(QosType.Reliable);
-        HostTopology top = new HostTopology(cc, Users);
+        if (lmao)
+        {
+            NetworkTransport.Init();
+            ConnectionConfig cc = new ConnectionConfig();
+            ReliableChannel = cc.AddChannel(QosType.Reliable);
+            HostTopology top = new HostTopology(cc, Users);
 
-        HostId = NetworkTransport.AddHost(top, 0);
+            HostId = NetworkTransport.AddHost(top, 0);
 #if UNITY_WEBGL && !UNITY_EDITOR
         NetworkTransport.Connect(HostId, ServerIP, Web, 0, out error);
 #else
-        connectionid = NetworkTransport.Connect(HostId, ServerIP, Port, 0, out error);
+            connectionid = NetworkTransport.Connect(HostId, ServerIP, Port, 0, out error);
 #endif
-        Debug.Log(string.Format("Puerto{0}", ServerIP));
-        severStarted = true;
-
+            Debug.Log(string.Format("Puerto{0}", ServerIP));
+            severStarted = true;
+        }
 
     }
     public void Shutdown()
