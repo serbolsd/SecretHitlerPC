@@ -254,6 +254,7 @@ public class Client : MonoBehaviour
             wait = false;
           }
           refElecciones.g_phase = 0;
+          refElecciones.g_isChancellor = false;
           refElecciones.g_isPhase = false;
           refElecciones.waitingNextTurn = false;
           refSesionLegislativa.alredySelectedCard = false;
@@ -332,6 +333,7 @@ public class Client : MonoBehaviour
           refElecciones.hidePlayers();
           refElecciones.g_phase = 1;
           refElecciones.g_isPhase = false;
+          refElecciones.g_isChancellor = true;
           if (msg.Test.Contains("canci-1"))
             refElecciones.g_idChancellor = -1;
           if (msg.Test.Contains("canci0"))

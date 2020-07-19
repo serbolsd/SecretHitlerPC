@@ -131,14 +131,16 @@ public class Elecciones : MonoBehaviour
       g_BtnYes.SetActive(true);
       g_BtnNo.SetActive(true);
 
-      g_currentPlayerTxt.GetComponent<Text>().text = "vota por "+g_Players[g_idChancellor].GetComponent<Jugador>().Apodo;
+      g_currentPlayerTxt.GetComponent<Text>().text = "vota por ";
+      g_currentPlayerTxt.GetComponent<Text>().text += g_Players[g_idChancellor].GetComponent<Jugador>().Apodo;
 
       //g_listPlayerVote = new int[g_usuarios];
 
       return;
     }
     //Esto se cambiara a cada pantalla
-    g_currentPlayerTxt.GetComponent<Text>().text = g_iteratorPlayers.ToString();
+    g_currentPlayerTxt.GetComponent<Text>().text = "vota por ";
+    g_currentPlayerTxt.GetComponent<Text>().text +=g_Players[g_idChancellor].GetComponent<Jugador>().Apodo;
     /*
     if (g_iteratorPlayers >= g_usuarios)
     {
@@ -226,10 +228,11 @@ public class Elecciones : MonoBehaviour
 
     g_iteratorPlayers = 0;
 
-    g_currentPlayerTxt.GetComponent<Text>().text = g_iteratorPlayers.ToString();
+    //g_currentPlayerTxt.GetComponent<Text>().text = g_iteratorPlayers.ToString();
 
     g_noCount++;
 
+    refGameMan.refServer.bWaitingGame = true;
     if (g_noCount > 3)
     {
       g_noCount = 0;
@@ -473,7 +476,7 @@ public class Elecciones : MonoBehaviour
 
   public void hidePlayers()
   {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < g_usuarios; i++)
     {
       //Solo es color del boton
       if (i < g_usuarios)

@@ -244,14 +244,17 @@ public class Server : MonoBehaviour
           if (msg.Test.Contains("car0"))
           {
             refSesionLegislativa.selectCard1();
+            refSesionLegislativa.PresidentEndSelection();
           }
           if (msg.Test.Contains("car1"))
           {
             refSesionLegislativa.selectCard2();
+            refSesionLegislativa.PresidentEndSelection();
           }
           if (msg.Test.Contains("car2"))
           {
             refSesionLegislativa.selectCard3();
+            refSesionLegislativa.PresidentEndSelection();
           }
         }
         else if (2 == refSesionLegislativa.m_phase)
@@ -259,10 +262,12 @@ public class Server : MonoBehaviour
           if (msg.Test.Contains("car0"))
           {
             refSesionLegislativa.selectCard1();
+            refSesionLegislativa.CansillerEndSelection();
           }
           if (msg.Test.Contains("car1"))
           {
             refSesionLegislativa.selectCard2();
+            refSesionLegislativa.CansillerEndSelection();
           }
         }
       }
@@ -312,7 +317,7 @@ public class Server : MonoBehaviour
       apode.Test += playerApode[i];
       for (int j = 0; j < conections.Count; j++)
       {
-        if (i != HostId)
+        if (j != HostId)
         {
           Debug.Log(conections[j]);
           SendClient(conections[j], apode);

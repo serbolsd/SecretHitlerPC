@@ -21,6 +21,8 @@ public class sesionLegislativa : MonoBehaviour
   public int card0 = -1;
   public int card1 = -1;
   public int card2 = -1;
+
+
   // Start is called before the first frame update
   void Start()
   {
@@ -220,37 +222,33 @@ public class sesionLegislativa : MonoBehaviour
     {
       return;
     }
-    if (!faseAlready)
+    if (m_gameMan.bServer)
     {
-      if (m_gameMan.bServer)
-      {
-        ColorBlock ColorButton1 = buttonCansillerCard1.GetComponent<Button>().colors;
-        colorButtonForClient(ref ColorButton1, 0);
-        buttonCansillerCard1.GetComponent<Button>().colors = ColorButton1;
-        buttonCansillerCard1.SetActive(true);
+      ColorBlock ColorButton1 = buttonCansillerCard1.GetComponent<Button>().colors;
+      colorButton(ref ColorButton1, 0);
+      buttonCansillerCard1.GetComponent<Button>().colors = ColorButton1;
+      buttonCansillerCard1.SetActive(true);
 
-        ColorBlock ColorButton2 = buttonCansillerCard2.GetComponent<Button>().colors;
-        colorButtonForClient(ref ColorButton2, 1);
-        buttonCansillerCard2.GetComponent<Button>().colors = ColorButton2;
-        buttonCansillerCard2.SetActive(true);
-        faseAlready = true;
-        alredySelectedCard = true;
-      }
-      else
-      {
-        ColorBlock ColorButton1 = buttonCansillerCard1.GetComponent<Button>().colors;
-        colorButtonForClient(ref ColorButton1, card0);
-        buttonCansillerCard1.GetComponent<Button>().colors = ColorButton1;
-        buttonCansillerCard1.SetActive(true);
+      ColorBlock ColorButton2 = buttonCansillerCard2.GetComponent<Button>().colors;
+      colorButton(ref ColorButton2, 1);
+      buttonCansillerCard2.GetComponent<Button>().colors = ColorButton2;
+      buttonCansillerCard2.SetActive(true);
+      faseAlready = true;
+      alredySelectedCard = true;
+    }
+    else
+    {
+      ColorBlock ColorButton1 = buttonCansillerCard1.GetComponent<Button>().colors;
+      colorButtonForClient(ref ColorButton1, card0);
+      buttonCansillerCard1.GetComponent<Button>().colors = ColorButton1;
+      buttonCansillerCard1.SetActive(true);
 
-        ColorBlock ColorButton2 = buttonCansillerCard2.GetComponent<Button>().colors;
-        colorButtonForClient(ref ColorButton2, card1);
-        buttonCansillerCard2.GetComponent<Button>().colors = ColorButton2;
-        buttonCansillerCard2.SetActive(true);
-        faseAlready = true;
-        alredySelectedCard = true;
-      }
-
+      ColorBlock ColorButton2 = buttonCansillerCard2.GetComponent<Button>().colors;
+      colorButtonForClient(ref ColorButton2, card1);
+      buttonCansillerCard2.GetComponent<Button>().colors = ColorButton2;
+      buttonCansillerCard2.SetActive(true);
+      faseAlready = true;
+      alredySelectedCard = true;
     }
   }
 

@@ -23,7 +23,11 @@ public class BarajaDePolizas : MonoBehaviour
     int numCartasColocadas = 0;
 
     bool Descartar = true;
-    void Start()
+
+
+  public GameObject[] liberarCards = new GameObject[5];
+  public GameObject[] facistCards = new GameObject[6];
+  void Start()
     {
         //onStart();
     }
@@ -167,9 +171,11 @@ public class BarajaDePolizas : MonoBehaviour
         switch (enMano[IndexOption].GetComponent<CartaDePoliza>().tipoDeCarta)
         {
             case 0:
+                liberarCards[numCartasLibColocadas].SetActive(true);
                 numCartasLibColocadas++;
                 break;
             default:
+                facistCards[numCartasFasColocadas].SetActive(true);
                 numCartasFasColocadas++;
                 break;
         }
