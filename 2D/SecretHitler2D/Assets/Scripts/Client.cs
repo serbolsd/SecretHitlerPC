@@ -26,6 +26,7 @@ public class Client : MonoBehaviour
   public SessionEjecutiva refSesionEjecutiva;
   public Elecciones refElecciones;
   public Ronda refRonda;
+  public gameManager refGManaer;
   public bool bContinueGame = false;
   public bool bInGameScene = false;
   public bool wait = false;
@@ -38,6 +39,7 @@ public class Client : MonoBehaviour
   bool DoOnce = false;
   bool debug = false;
   public GameObject connectButtom;
+  public bool allPlayersRegister;
 
   public Dictionary<int, string> playerApode = new Dictionary<int, string>();
 
@@ -244,9 +246,186 @@ public class Client : MonoBehaviour
     }
     else
     {
+      if (msg.Test.Contains("doVeto"))
+      {
+        refSesionLegislativa.precidentDecideForVeto();
+      }
+      if (msg.Test.Contains("cancelVeto"))
+      {
+        refSesionLegislativa.cancelVeto();
+      }
+      if (msg.Test.Contains("realizeVeto"))
+      {
+        refSesionLegislativa.veto();
+      }
+      if (msg.Test.Contains("liberalwon") || msg.Test.Contains("fascistwon"))
+      {
+        if (msg.Test.Contains("liberalwon"))
+        {
+          refGManaer.liberalWon = true;
+        }
+        else
+        {
+          refGManaer.fascistWon = true;
+        }
+        refGManaer.gameFinished = true;
+      }
+      if (msg.Test.Contains("rol"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int rol;
+        int.TryParse(chek[1], out rol);
+        if (msg.Test.Contains("rol0"))
+        {
+          refGManaer.g_Players[0].GetComponent<Jugador>().Rol = rol;
+        }
+        else if (msg.Test.Contains("rol1"))
+        {
+          refGManaer.g_Players[1].GetComponent<Jugador>().Rol = rol;
+        }
+        else if (msg.Test.Contains("rol2"))
+        {
+          refGManaer.g_Players[2].GetComponent<Jugador>().Rol = rol;
+        }
+        else if (msg.Test.Contains("rol3"))
+        {
+          refGManaer.g_Players[3].GetComponent<Jugador>().Rol = rol;
+        }
+        else if (msg.Test.Contains("rol4"))
+        {
+          refGManaer.g_Players[4].GetComponent<Jugador>().Rol = rol;
+        }
+        else if (msg.Test.Contains("rol5"))
+        {
+          refGManaer.g_Players[5].GetComponent<Jugador>().Rol = rol;
+        }
+        else if (msg.Test.Contains("rol6"))
+        {
+          refGManaer.g_Players[6].GetComponent<Jugador>().Rol = rol;
+        }
+        else if (msg.Test.Contains("rol7"))
+        {
+          refGManaer.g_Players[7].GetComponent<Jugador>().Rol = rol;
+        }
+        else if (msg.Test.Contains("rol8"))
+        {
+          refGManaer.g_Players[8].GetComponent<Jugador>().Rol = rol;
+        }
+        else if (msg.Test.Contains("rol9"))
+        {
+          refGManaer.g_Players[9].GetComponent<Jugador>().Rol = rol;
+        }
+      }
+      if (msg.Test.Contains("ap"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int afil;
+        int.TryParse(chek[1], out afil);
+        if (msg.Test.Contains("ap0"))
+        {
+          refGManaer.g_Players[0].GetComponent<Jugador>().idAfiliation = afil;
+          if (1==m_numPlayers)
+          {
+            allPlayersRegister = true;
+            FindObjectOfType<SetApodoRo>().onInit();
+          }
+        }
+        else if (msg.Test.Contains("ap1"))
+        {
+          refGManaer.g_Players[1].GetComponent<Jugador>().idAfiliation = afil;
+          if (2 == m_numPlayers)
+          {
+            allPlayersRegister = true;
+            FindObjectOfType<SetApodoRo>().onInit();
+          }
+        }
+        else if (msg.Test.Contains("ap2"))
+        {
+          refGManaer.g_Players[2].GetComponent<Jugador>().idAfiliation = afil;
+          if (3 == m_numPlayers)
+          {
+            allPlayersRegister = true;
+            FindObjectOfType<SetApodoRo>().onInit();
+          }
+        }
+        else if (msg.Test.Contains("ap3"))
+        {
+          refGManaer.g_Players[3].GetComponent<Jugador>().idAfiliation = afil;
+          if (4 == m_numPlayers)
+          {
+            allPlayersRegister = true;
+            FindObjectOfType<SetApodoRo>().onInit();
+          }
+        }
+        else if (msg.Test.Contains("ap4"))
+        {
+          refGManaer.g_Players[4].GetComponent<Jugador>().idAfiliation = afil;
+          if (5 == m_numPlayers)
+          {
+            allPlayersRegister = true;
+            FindObjectOfType<SetApodoRo>().onInit();
+          }
+        }
+        else if (msg.Test.Contains("ap5"))
+        {
+          refGManaer.g_Players[5].GetComponent<Jugador>().idAfiliation = afil;
+          if (6 == m_numPlayers)
+          {
+            allPlayersRegister = true;
+            FindObjectOfType<SetApodoRo>().onInit();
+          }
+        }
+        else if (msg.Test.Contains("ap6"))
+        {
+          refGManaer.g_Players[6].GetComponent<Jugador>().idAfiliation = afil;
+          if (7 == m_numPlayers)
+          {
+            allPlayersRegister = true;
+            FindObjectOfType<SetApodoRo>().onInit();
+          }
+        }
+        else if (msg.Test.Contains("ap7"))
+        {
+          refGManaer.g_Players[7].GetComponent<Jugador>().idAfiliation = afil;
+          if (8 == m_numPlayers)
+          {
+            allPlayersRegister = true;
+            FindObjectOfType<SetApodoRo>().onInit();
+          }
+        }
+        else if (msg.Test.Contains("ap8"))
+        {
+          refGManaer.g_Players[8].GetComponent<Jugador>().idAfiliation = afil;
+          if (9 == m_numPlayers)
+          {
+            allPlayersRegister = true;
+            FindObjectOfType<SetApodoRo>().onInit();
+          }
+        }
+        else if (msg.Test.Contains("ap9"))
+        {
+          refGManaer.g_Players[9].GetComponent<Jugador>().idAfiliation = afil;
+          if (10 == m_numPlayers)
+          {
+            allPlayersRegister = true;
+            FindObjectOfType<SetApodoRo>().onInit();
+          }
+        }
+      }
       if (msg.Test.Contains("ronda0"))
       {
         refRonda.phase = 0;
+        if (msg.Test.Contains("topCard"))
+        {
+          if (msg.Test.Contains("topCard1"))
+          {
+            refSesionLegislativa.baraja.addTopCardClient(1);
+          }
+          else
+          {
+            refSesionLegislativa.baraja.addTopCardClient(0);
+          }
+        }
         if (msg.Test.Contains("elec0"))
         {
           if (msg.Test.Contains("continue"))
@@ -259,6 +438,7 @@ public class Client : MonoBehaviour
           refElecciones.waitingNextTurn = false;
           refSesionLegislativa.alredySelectedCard = false;
           refSesionLegislativa.faseAlready = false;
+          refSesionEjecutiva.hideAll();
           if (msg.Test.Contains("presi-1"))
             refElecciones.g_idPresident = -1;
           if (msg.Test.Contains("presi0"))
@@ -282,27 +462,27 @@ public class Client : MonoBehaviour
           if (msg.Test.Contains("presi9"))
             refElecciones.g_idPresident = 9;
 
-          if (msg.Test.Contains("oldpresi-1"))
+          if (msg.Test.Contains("oldpre-1"))
             refElecciones.g_idOldPresident = -1;
-          if (msg.Test.Contains("oldpresi0"))
+          if (msg.Test.Contains("oldpre0"))
             refElecciones.g_idOldPresident = 0;
-          if (msg.Test.Contains("oldpresi1"))
+          if (msg.Test.Contains("oldpre1"))
             refElecciones.g_idOldPresident = 1;
-          if (msg.Test.Contains("oldpresi2"))
+          if (msg.Test.Contains("oldpre2"))
             refElecciones.g_idOldPresident = 2;
-          if (msg.Test.Contains("oldpresi3"))
+          if (msg.Test.Contains("oldpre3"))
             refElecciones.g_idOldPresident = 3;
-          if (msg.Test.Contains("oldpresi4"))
+          if (msg.Test.Contains("oldpre4"))
             refElecciones.g_idOldPresident = 4;
-          if (msg.Test.Contains("oldpresi5"))
+          if (msg.Test.Contains("oldpre5"))
             refElecciones.g_idOldPresident = 5;
-          if (msg.Test.Contains("oldpresi6"))
+          if (msg.Test.Contains("oldpre6"))
             refElecciones.g_idOldPresident = 6;
-          if (msg.Test.Contains("oldpresi7"))
+          if (msg.Test.Contains("oldpre7"))
             refElecciones.g_idOldPresident = 7;
-          if (msg.Test.Contains("oldpresi8"))
+          if (msg.Test.Contains("oldpre8"))
             refElecciones.g_idOldPresident = 8;
-          if (msg.Test.Contains("oldpresi9"))
+          if (msg.Test.Contains("oldpre9"))
             refElecciones.g_idOldPresident = 9;
 
           if (msg.Test.Contains("oldcanci-1"))
@@ -441,6 +621,14 @@ public class Client : MonoBehaviour
         }
         if (msg.Test.Contains("leg3"))
         {
+          if (msg.Test.Contains("fascista"))
+          {
+            refSesionLegislativa.baraja.clientUpdateTab(1);
+          }
+          else
+          {
+            refSesionLegislativa.baraja.clientUpdateTab(0);
+          }
           refSesionLegislativa.m_phase = 3;
           refSesionLegislativa.CansillerEndSelection();
           refSesionLegislativa.m_phase = 3;
@@ -454,9 +642,114 @@ public class Client : MonoBehaviour
         }
 
       }
-      Net_MessageTest nt = new Net_MessageTest();
-      nt.Test = "Okey";
-      SendeServer(nt);
+      else if (msg.Test.Contains("ronda3"))
+      {
+        if (msg.Test.Contains("continue"))
+        {
+          wait = false;
+        }
+        refRonda.phase = 3;
+        if (msg.Test.Contains("eje0 "))
+        {
+          refSesionEjecutiva.bAlredyInitPhase = false;
+          refSesionEjecutiva.phase = 0;
+          refSesionEjecutiva.bhideButtons = false;
+          refSesionEjecutiva.waitingNextTurn = false;
+          refSesionEjecutiva.bhideButtonAndText = false;
+          refSesionEjecutiva.bhideButtons = false;
+          refSesionEjecutiva.bAlredyDrawMembership = false;
+          refSesionEjecutiva.bSeeingMembership = false;
+          refSesionEjecutiva.alredydoit = false;
+
+        }
+        if (msg.Test.Contains("eje1 "))
+        {
+          //refSesionEjecutiva.phase = 1;
+          if (msg.Test.Contains("car00"))
+          {
+            refSesionEjecutiva.card0 = 0;
+          }
+          else
+          {
+            refSesionEjecutiva.card0 = 1;
+          }
+          if (msg.Test.Contains("car10"))
+          {
+            refSesionEjecutiva.card1 = 0;
+          }
+          else
+          {
+            refSesionEjecutiva.card1 = 1;
+          }
+          if (msg.Test.Contains("car20"))
+          {
+            refSesionEjecutiva.card2 = 0;
+          }
+          else
+          {
+            refSesionEjecutiva.card2 = 1;
+          }
+        }
+        if (msg.Test.Contains("eje2 "))
+        {
+          if (msg.Test.Contains("ejecuted"))
+          {
+            if (msg.Test.Contains("ejecuted0"))
+              refGManaer.g_Players[0].GetComponent<Jugador>().bIsDead = true;
+            if (msg.Test.Contains("ejecuted1"))
+              refGManaer.g_Players[1].GetComponent<Jugador>().bIsDead = true;
+            if (msg.Test.Contains("ejecuted2"))
+              refGManaer.g_Players[2].GetComponent<Jugador>().bIsDead = true;
+            if (msg.Test.Contains("ejecuted3"))
+              refGManaer.g_Players[3].GetComponent<Jugador>().bIsDead = true;
+            if (msg.Test.Contains("ejecuted4"))
+              refGManaer.g_Players[4].GetComponent<Jugador>().bIsDead = true;
+            if (msg.Test.Contains("ejecuted5"))
+              refGManaer.g_Players[5].GetComponent<Jugador>().bIsDead = true;
+            if (msg.Test.Contains("ejecuted6"))
+              refGManaer.g_Players[6].GetComponent<Jugador>().bIsDead = true;
+            if (msg.Test.Contains("ejecuted7"))
+              refGManaer.g_Players[7].GetComponent<Jugador>().bIsDead = true;
+            if (msg.Test.Contains("ejecuted8"))
+              refGManaer.g_Players[8].GetComponent<Jugador>().bIsDead = true;
+            if (msg.Test.Contains("ejecuted9"))
+              refGManaer.g_Players[9].GetComponent<Jugador>().bIsDead = true;
+          }
+          if (msg.Test.Contains("special"))
+          {
+            if (msg.Test.Contains("special-1"))
+              refElecciones.g_idPresident = -1;
+            if (msg.Test.Contains("special0"))
+              refElecciones.g_idPresident = 0;
+            if (msg.Test.Contains("special1"))
+              refElecciones.g_idPresident = 1;
+            if (msg.Test.Contains("special2"))
+              refElecciones.g_idPresident = 2;
+            if (msg.Test.Contains("special3"))
+              refElecciones.g_idPresident = 3;
+            if (msg.Test.Contains("special4"))
+              refElecciones.g_idPresident = 4;
+            if (msg.Test.Contains("special5"))
+              refElecciones.g_idPresident = 5;
+            if (msg.Test.Contains("special6"))
+              refElecciones.g_idPresident = 6;
+            if (msg.Test.Contains("special7"))
+              refElecciones.g_idPresident = 7;
+            if (msg.Test.Contains("special8"))
+              refElecciones.g_idPresident = 8;
+            if (msg.Test.Contains("special9"))
+              refElecciones.g_idPresident = 9;
+          }
+          refSesionEjecutiva.phase = 2;
+          refSesionLegislativa.baraja.canEjecutive = false;
+        }
+      }
+      if (allPlayersRegister)
+      {
+        Net_MessageTest nt = new Net_MessageTest();
+        nt.Test = "Okey";
+        SendeServer(nt);
+      }
     }
   }
   #endregion
@@ -492,7 +785,8 @@ public class Client : MonoBehaviour
     refSesionEjecutiva = FindObjectOfType<SessionEjecutiva>();
     refElecciones = FindObjectOfType<Elecciones>();
     refRonda = FindObjectOfType<Ronda>();
-    UpdateMEssagePump();
+    refGManaer = FindObjectOfType<gameManager>();
+    //UpdateMEssagePump();
   }
 
   public void gameUpdate()

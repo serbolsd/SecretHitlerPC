@@ -9,17 +9,7 @@ public class afiliaciones : MonoBehaviour
     int[] idRol;
     public string[] afil;
     public Seleccion_Roll SR; 
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     public void darAfiliacion()
     {
         idRol = SR.idsRol;

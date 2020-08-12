@@ -12,35 +12,30 @@ public class sesionLegislativa : MonoBehaviour
   public GameObject buttonPresidentCard3;
   public GameObject buttonCansillerCard1;
   public GameObject buttonCansillerCard2;
+  public GameObject txtToVeto;
+  public GameObject buttonToVeto;
+  public GameObject buttonYesVeto;
+  public GameObject buttonNoVeto;
+  public GameObject txtPresidetnDoNoVeto;
   public BarajaDePolizas baraja;
   public gameManager m_gameMan;
   public Elecciones m_eleccionsData;
   public bool faseAlready = false;
   public bool waitingNextTurn = false;
   public bool alredySelectedCard = false;
+  public bool bFascist = false;
+  public bool bCanVeto = false;
+  public bool bDoingVeto = false;
   public int card0 = -1;
   public int card1 = -1;
   public int card2 = -1;
-
-
-  // Start is called before the first frame update
-  void Start()
-  {
-
-  }
-
-  // Update is called once per frame
-  void Update()
-  {
-
-  }
 
   public void onStart()
   {
     baraja.onStart();
     m_gameMan = FindObjectOfType<gameManager>();
     m_eleccionsData = FindObjectOfType<Elecciones>();
-
+    bCanVeto = true;
   }
 
   public void onUpdate()
@@ -49,6 +44,15 @@ public class sesionLegislativa : MonoBehaviour
     {
       case 0:
         alredySelectedCard = false;
+        bDoingVeto = false;
+        if(baraja.numCartasFasColocadas>=5)
+        {
+          bCanVeto = true;
+        }
+        else
+        {
+          bCanVeto = false;
+        }
         takeCardsFase();
         break;
       case 1:
@@ -58,6 +62,7 @@ public class sesionLegislativa : MonoBehaviour
         CansillerSelection();
         break;
       case 3:
+        hideCansillerselection();
         waitingNextTurn = true;
         return;
       default:
@@ -90,7 +95,8 @@ public class sesionLegislativa : MonoBehaviour
     if (!m_gameMan.bServer)
     {
       Net_MessageTest nt = new Net_MessageTest();
-      nt.Test = "takeCards";
+      //nt.Test = "takeCards";
+      nt.Test = Traslate.getTxtTakeCards();
       m_gameMan.refCliente.SendeServer(nt);
       faseAlready = false;
       buttonTakeCard.SetActive(false);
@@ -106,6 +112,10 @@ public class sesionLegislativa : MonoBehaviour
   }
   public void selectCard1()
   {
+    if (bDoingVeto)
+    {
+      return;
+    }
     if (m_gameMan.bServer)
     {
       baraja.selectCard1();
@@ -122,6 +132,10 @@ public class sesionLegislativa : MonoBehaviour
 
   public void selectCard2()
   {
+    if (bDoingVeto)
+    {
+      return;
+    }
     if (m_gameMan.bServer)
     {
       baraja.selectCard2();
@@ -235,6 +249,10 @@ public class sesionLegislativa : MonoBehaviour
       buttonCansillerCard2.SetActive(true);
       faseAlready = true;
       alredySelectedCard = true;
+      if (bCanVeto)
+      {
+        showVeto();
+      }
     }
     else
     {
@@ -249,6 +267,10 @@ public class sesionLegislativa : MonoBehaviour
       buttonCansillerCard2.SetActive(true);
       faseAlready = true;
       alredySelectedCard = true;
+      if (bCanVeto)
+      {
+        showVeto();
+      }
     }
   }
 
@@ -310,5 +332,75 @@ public class sesionLegislativa : MonoBehaviour
       color.normalColor = Color.blue;
       color.pressedColor = Color.blue;
     }
+  }
+
+  public void addTopCard(ref int type)
+  {
+    baraja.addTopCard(ref type);
+  }
+
+  public void showVeto()
+  {
+    txtToVeto.GetComponent<Text>().text = Traslate.getTxtDoVeto();
+    txtToVeto.SetActive(true);
+    buttonToVeto.SetActive(true);
+  }
+
+  public void anwerForVeto()
+  {
+    bDoingVeto = true;
+    txtToVeto.GetComponent<Text>().text = Traslate.getTxtWaitForVeto();
+    buttonToVeto.SetActive(false);
+    if (m_gameMan.bServer)
+    {
+      baraja.selectCard3();
+      m_gameMan.refServer.bWaitingGame = true;
+    }
+    else
+    {
+      Net_MessageTest nt = new Net_MessageTest();
+      nt.Test = "doveto";
+      m_gameMan.refCliente.SendeServer(nt);
+    }
+  }
+
+  public void precidentDecideForVeto()
+  {
+    if (m_gameMan.idConection != m_eleccionsData.g_idPresident)
+    {
+      return;
+    }
+    bDoingVeto = true;
+    buttonYesVeto.SetActive(true);
+    buttonNoVeto.SetActive(true);
+    txtPresidetnDoNoVeto.GetComponent<Text>().text = Traslate.getTxtPresidentVeto();
+    txtPresidetnDoNoVeto.SetActive(true);
+  }
+
+  public void cancelVeto()
+  {
+    bDoingVeto = false;
+    buttonYesVeto.SetActive(false);
+    buttonNoVeto.SetActive(false);
+    txtPresidetnDoNoVeto.SetActive(false);
+    txtToVeto.SetActive(false);
+    buttonToVeto.SetActive(false);
+  }
+
+  public void veto()
+  {
+    bDoingVeto = false;
+    if (m_gameMan.bServer)
+    {
+      baraja.veto();
+    }
+    buttonYesVeto.SetActive(false);
+    buttonNoVeto.SetActive(false);
+    txtPresidetnDoNoVeto.SetActive(false);
+    txtToVeto.SetActive(false);
+    buttonToVeto.SetActive(false);
+    buttonCansillerCard1.SetActive(false);
+    buttonCansillerCard2.SetActive(false);
+    EndSelecction();
   }
 }

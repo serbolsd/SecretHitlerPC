@@ -35,6 +35,7 @@ public class Server : MonoBehaviour
   public SessionEjecutiva refSesionEjecutiva;
   public Elecciones refElecciones;
   public Ronda refRonda;
+  public gameManager refGameMan;
   public bool bContinueGame = false;
   public bool bWaitingGame = false;
   bool bInGameScene = false;
@@ -186,6 +187,18 @@ public class Server : MonoBehaviour
     }
     else
     {
+      if (msg.Test.Contains("doveto"))
+      {
+        doVeto();
+      }
+      if (msg.Test.Contains("vetono"))
+      {
+        cancelVeto();
+      }
+      if (msg.Test.Contains("vetoyes"))
+      {
+        realizeVeto();
+      }
       if (msg.Test.Contains("Okey"))
       {
         playerRedyDic[playerId[connectionId]] = 1;
@@ -193,6 +206,7 @@ public class Server : MonoBehaviour
 
       if (0 == rondaFase) //elecciones
       {
+
         if (msg.Test.Contains("canciller:"))
         {
           if (msg.Test.Contains("canciller:0"))
@@ -268,6 +282,71 @@ public class Server : MonoBehaviour
           {
             refSesionLegislativa.selectCard2();
             refSesionLegislativa.CansillerEndSelection();
+          }
+        }
+      }
+      else if (3 == rondaFase)//legislativa
+      {
+        if (0 == refSesionEjecutiva.phase)
+        {
+          if (msg.Test.Contains("OKejec"))
+          {
+            refSesionEjecutiva.OKbutton();
+          }
+        }
+        else if (1 == refSesionEjecutiva.phase)
+        {
+          if (msg.Test.Contains("OKejec"))
+          {
+            refSesionEjecutiva.OKbutton();
+          }
+          if (msg.Test.Contains("ejecute"))
+          {
+            refSesionEjecutiva.PowerToSelectPlayer = 0;
+            if (msg.Test.Contains("ejecute0"))
+              refSesionEjecutiva.BtnPlayer1();
+            if (msg.Test.Contains("ejecute1"))
+              refSesionEjecutiva.BtnPlayer2();
+            if (msg.Test.Contains("ejecute2"))
+              refSesionEjecutiva.BtnPlayer3();
+            if (msg.Test.Contains("ejecute3"))
+              refSesionEjecutiva.BtnPlayer4();
+            if (msg.Test.Contains("ejecute4"))
+              refSesionEjecutiva.BtnPlayer5();
+            if (msg.Test.Contains("ejecute5"))
+              refSesionEjecutiva.BtnPlayer6();
+            if (msg.Test.Contains("ejecute6"))
+              refSesionEjecutiva.BtnPlayer7();
+            if (msg.Test.Contains("ejecute7"))
+              refSesionEjecutiva.BtnPlayer8();
+            if (msg.Test.Contains("ejecute8"))
+              refSesionEjecutiva.BtnPlayer9();
+            if (msg.Test.Contains("ejecute9"))
+              refSesionEjecutiva.BtnPlayer10();
+          }
+          if (msg.Test.Contains("special"))
+          {
+            refSesionEjecutiva.PowerToSelectPlayer = 2;
+            if (msg.Test.Contains("special0"))
+              refSesionEjecutiva.BtnPlayer1();
+            if (msg.Test.Contains("special1"))
+              refSesionEjecutiva.BtnPlayer2();
+            if (msg.Test.Contains("special2"))
+              refSesionEjecutiva.BtnPlayer3();
+            if (msg.Test.Contains("special3"))
+              refSesionEjecutiva.BtnPlayer4();
+            if (msg.Test.Contains("special4"))
+              refSesionEjecutiva.BtnPlayer5();
+            if (msg.Test.Contains("special5"))
+              refSesionEjecutiva.BtnPlayer6();
+            if (msg.Test.Contains("special6"))
+              refSesionEjecutiva.BtnPlayer7();
+            if (msg.Test.Contains("special7"))
+              refSesionEjecutiva.BtnPlayer8();
+            if (msg.Test.Contains("special8"))
+              refSesionEjecutiva.BtnPlayer9();
+            if (msg.Test.Contains("special9"))
+              refSesionEjecutiva.BtnPlayer10();
           }
         }
       }
@@ -386,14 +465,47 @@ public class Server : MonoBehaviour
     refSesionEjecutiva = FindObjectOfType<SessionEjecutiva>();
     refElecciones = FindObjectOfType<Elecciones>();
     refRonda = FindObjectOfType<Ronda>();
+    refGameMan = FindObjectOfType<gameManager>();
     for (int i = 0; i < playerRedyDic.Count; i++)
     {
       playerRedyDic[i] = 0;
     }
-    //playerVoteDic = playerRedyDic;
-    //ENVIAR REGLAS
-    //ENVIAR NUMERO DE JUGADORES Y SUS DATOS
-    //ENVIAR ID PRESIDENTE
+  }
+
+  public void sendAfiliations(int player, int afil)
+  {
+    for (int i = 0; i < conections.Count; i++)
+    {
+      if (i != HostId)
+      {
+        Net_MessageTest nt = new Net_MessageTest();
+        nt.Test = "ap";
+        nt.Test += player;
+        nt.Test += "_";
+        nt.Test += afil;
+
+        Debug.Log(conections[i]);
+        SendClient(conections[i], nt);
+      }
+    }
+  }
+
+  public void sendRol(int player, int rol)
+  {
+    for (int i = 0; i < conections.Count; i++)
+    {
+      if (i != HostId)
+      {
+        Net_MessageTest nt = new Net_MessageTest();
+        nt.Test = "rol";
+        nt.Test += player;
+        nt.Test += "_";
+        nt.Test += rol;
+
+        Debug.Log(conections[i]);
+        SendClient(conections[i], nt);
+      }
+    }
   }
 
   void checkForContinueGame()
@@ -471,10 +583,37 @@ public class Server : MonoBehaviour
     {
       //agregar datos importantes
       //rondaFase = refRonda.phase;
+      if (refGameMan.fascistWon || refGameMan.liberalWon)
+      {
+        if (refGameMan.fascistWon)
+        {
+          nt.Test = "fascistwon";
+        }
+        else
+        {
+          nt.Test = "liberalwon";
+        }
+        for (int i = 0; i < conections.Count; i++)
+        {
+          if (i != HostId)
+          {
+            Debug.Log(conections[i]);
+            SendClient(conections[i], nt);
+          }
+        }
+          refGameMan.gameFinished = true;
+        return;
+      }
       if (0 == rondaFase) //elecciones
       {
         nt.Test = "ronda0 :";
         //refRonda.phase = 0;
+        if (refElecciones.putTheTopCard)
+        {
+          nt.Test += " topCard";
+          nt.Test += refElecciones.typeTopCard;
+          refElecciones.putTheTopCard = false;
+        }
         if (0 == refElecciones.g_phase)
         {
           for (int i = 0; i < playerVoteDic.Count; i++)
@@ -491,7 +630,7 @@ public class Server : MonoBehaviour
           nt.Test += " presi";
           nt.Test += refElecciones.g_idPresident;
           nt.Test += " : ";
-          nt.Test += "oldpresi";
+          nt.Test += "oldpre";
           nt.Test += refElecciones.g_idOldPresident;
           nt.Test += " : ";
           nt.Test += "oldcanci";
@@ -529,12 +668,12 @@ public class Server : MonoBehaviour
           }
         }
       }
-      else if (1 == rondaFase)//ejecutiva
-      {
-        nt.Test = "ronda1 ";
-
-
-      }
+      //else if (1 == rondaFase)//ejecutiva
+      //{
+      //  nt.Test = "ronda1 ";
+      //
+      //
+      //}
       else if (2 == rondaFase)//legislativa
       {
         nt.Test = "ronda2 ";
@@ -561,10 +700,15 @@ public class Server : MonoBehaviour
           nt.Test += refSesionLegislativa.baraja.enMano[0].GetComponent<CartaDePoliza>().tipoDeCarta;
           nt.Test += "car1";
           nt.Test += refSesionLegislativa.baraja.enMano[1].GetComponent<CartaDePoliza>().tipoDeCarta;
+
         }
         else if (3 == refSesionLegislativa.m_phase)
         {
           nt.Test += "leg3 ";
+          if (refSesionLegislativa.baraja.bFascist)
+          {
+            nt.Test += "fascista";
+          }
           for (int i = 0; i < playerVoteDic.Count; i++)
           {
             playerVoteDic[playerId[conections[i]]] = 0;
@@ -584,6 +728,67 @@ public class Server : MonoBehaviour
           }
         }
       }
+      if (3 == rondaFase) //elecciones
+      {
+        nt.Test = "ronda3 ";
+        if (0==refSesionEjecutiva.phase)
+        {
+          nt.Test += "eje0 ";
+          nt.Test += "continue ";
+        }
+        if (1 == refSesionEjecutiva.phase)
+        {
+          nt.Test += "eje1 ";
+          switch (refSesionEjecutiva.PowerToSelectPlayer)
+          {
+            case 0:
+              break;
+            case 1:
+              break;
+            case 2:
+              break;
+            case 3:
+              nt.Test += "car0";
+              nt.Test += refSesionEjecutiva.cardsToPreviewTop[0].GetComponent<CartaDePoliza>().tipoDeCarta;
+              nt.Test += "car1";
+              nt.Test += refSesionEjecutiva.cardsToPreviewTop[1].GetComponent<CartaDePoliza>().tipoDeCarta;
+              nt.Test += "car2";
+              nt.Test += refSesionEjecutiva.cardsToPreviewTop[2].GetComponent<CartaDePoliza>().tipoDeCarta;
+              break;
+            default:
+              break;
+          }
+        }
+        if (2 == refSesionEjecutiva.phase)
+        {
+          nt.Test += "eje2 ";
+          switch (refSesionEjecutiva.PowerToSelectPlayer)
+          {
+            case 0:
+              nt.Test += "ejecuted";
+              nt.Test += refSesionEjecutiva.playerEjecuted;
+              break;
+            case 1:
+              break;
+            case 2:
+              nt.Test += "special";
+              nt.Test += refSesionEjecutiva.refElec.g_specialIDPresident;
+              break;
+            case 3:
+              break;
+            default:
+              break;
+          }
+        }
+        for (int i = 0; i < conections.Count; i++)
+        {
+          if (i != HostId)
+          {
+            Debug.Log(conections[i]);
+            SendClient(conections[i], nt);
+          }
+        }
+      }
       bContinueGame = false;
       for (int i = 0; i < playerRedyDic.Count; i++)
       {
@@ -593,6 +798,54 @@ public class Server : MonoBehaviour
     }
     Debug.Log(nt.Test);
     bWaitingGame = false;
+  }
+
+  public void doVeto()
+  {
+    refSesionLegislativa.precidentDecideForVeto();
+    Net_MessageTest nt = new Net_MessageTest();
+    nt.Test += "doVeto";
+
+    for (int i = 0; i < conections.Count; i++)
+    {
+      if (i != HostId)
+      {
+        Debug.Log(conections[i]);
+        SendClient(conections[i], nt);
+      }
+    }
+  }
+
+  public void cancelVeto()
+  {
+    refSesionLegislativa.cancelVeto();
+    Net_MessageTest nt = new Net_MessageTest();
+    nt.Test += "cancelVeto";
+
+    for (int i = 0; i < conections.Count; i++)
+    {
+      if (i != HostId)
+      {
+        Debug.Log(conections[i]);
+        SendClient(conections[i], nt);
+      }
+    }
+  }
+
+  public void realizeVeto()
+  {
+    Net_MessageTest nt = new Net_MessageTest();
+    nt.Test += "realizeVeto";
+
+    for (int i = 0; i < conections.Count; i++)
+    {
+      if (i != HostId)
+      {
+        Debug.Log(conections[i]);
+        SendClient(conections[i], nt);
+      }
+    }
+    refSesionLegislativa.veto();
   }
 }
 

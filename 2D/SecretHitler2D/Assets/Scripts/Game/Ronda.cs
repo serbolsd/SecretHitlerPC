@@ -35,9 +35,18 @@ public class Ronda : MonoBehaviour
     m_fLegislativa.onStart();
     m_fElecciones = FindObjectOfType<Elecciones>();
     m_fElecciones.OnStart();
+    //m_fElecciones.g_Players = refGameMan.g_Players;
     g_BtnPlayers = m_fElecciones.g_BtnPlayers;
     reRole();
     refGameMan = FindObjectOfType<gameManager>();
+    if(m_roles.numPlayers<7)
+     m_fEjecutiva.gamePowersForNumPlayer=0;
+    else if(m_roles.numPlayers<9)
+     m_fEjecutiva.gamePowersForNumPlayer=1;
+    else
+     m_fEjecutiva.gamePowersForNumPlayer=2;
+    m_fEjecutiva.onInit();
+    m_fEjecutiva.g_BtnPlayers = g_BtnPlayers;
 
   }
 
@@ -68,6 +77,9 @@ public class Ronda : MonoBehaviour
         }
         LegislativePhase();
         break;
+      case 3:
+        realEjecutivePhase();
+        break;
       default:
         preGamePhase();
         break;
@@ -97,15 +109,61 @@ public class Ronda : MonoBehaviour
 
   }
 
+  void realEjecutivePhase()
+  {
+    if (!AlreadyInitPhase)
+    {
+      if (m_fEjecutiva.waitingNextTurn)
+      {
+        //si se esta esperando el siguiente turno y hay algo que inicializar se hace aqui
+      }
+      if (m_fElecciones.specialSelection)
+      {
+        m_fElecciones.g_idPresident = m_fElecciones.g_savedidPresident;
+        m_fElecciones.g_idOldPresident = m_fElecciones.g_savedidOldPresident;
+        m_fElecciones.g_savedidPresident = -1;
+        m_fElecciones.g_savedidOldPresident = -1;
+        m_fElecciones.specialSelection = false;
+      }
+      AlreadyInitPhase = true;
+      m_fEjecutiva.bhideButtons = false;
+      m_fEjecutiva.waitingNextTurn = false;
+      m_fEjecutiva.bhideButtonAndText = false;
+      m_fEjecutiva.bhideButtons = false;
+      m_fEjecutiva.bAlredyDrawMembership = false;
+      m_fEjecutiva.bSeeingMembership = false;
+      m_fEjecutiva.alredydoit = false;
+      m_fEjecutiva.phase = 0;
+    }
+    if (m_fLegislativa.baraja.canEjecutive)
+    {
+      m_fEjecutiva.onUpdate();
+    }
+    else
+    {
+      m_fEjecutiva.waitingNextTurn = true;
+    }
+    if (m_fEjecutiva.waitingNextTurn)
+    {
+      AlreadyInitPhase = false;
+     m_fLegislativa.baraja.canEjecutive = false;
+      //m_fElecciones.specialSelection = false;
+      if (refGameMan.bServer)
+      {
+        phase = 0;
+      }
+    }
+  }
+
   void EjecutivePhase()
   {
+    ++phase;
+    return;
     if (null == m_fEjecutiva || !m_fEjecutiva.poderActivo)
     {
       if (refGameMan.bServer)
       {
-        ++phase;
       }
-      return;
     }
     if (!AlreadyInitPhase)
     {
@@ -136,6 +194,7 @@ public class Ronda : MonoBehaviour
       {
         m_fElecciones.BtnNextTurn();
       }
+      
       AlreadyInitPhase = true;
       m_fElecciones.g_phase = 0;
       m_fElecciones.waitingNextTurn = false;
@@ -144,6 +203,7 @@ public class Ronda : MonoBehaviour
         refGameMan.refServer.bWaitingGame = true;
       }
     }
+    m_fLegislativa.hideCansillerselection();
     m_fElecciones.onUpdate();
     if (m_fElecciones.waitingNextTurn)
     {
@@ -174,9 +234,10 @@ public class Ronda : MonoBehaviour
     {
       AlreadyInitPhase = false;
       m_fLegislativa.waitingNextTurn = true;
+      m_fEjecutiva.bAlredyInitPhase = false;
       if (refGameMan.bServer)
       {
-        phase = 0;
+        phase = 3;
       }
     }
   }
@@ -188,7 +249,7 @@ public class Ronda : MonoBehaviour
       case 0:
         m_fElecciones.BtnPlayer1();
         break;
-      case 1:
+      case 3:
         m_fEjecutiva.BtnPlayer1();
         break;
       default:
@@ -202,7 +263,7 @@ public class Ronda : MonoBehaviour
       case 0:
         m_fElecciones.BtnPlayer2();
         break;
-      case 1:
+      case 3:
         m_fEjecutiva.BtnPlayer2();
         break;
       default:
@@ -216,7 +277,7 @@ public class Ronda : MonoBehaviour
       case 0:
         m_fElecciones.BtnPlayer3();
         break;
-      case 1:
+      case 3:
         m_fEjecutiva.BtnPlayer3();
         break;
       default:
@@ -230,7 +291,7 @@ public class Ronda : MonoBehaviour
       case 0:
         m_fElecciones.BtnPlayer4();
         break;
-      case 1:
+      case 3:
         m_fEjecutiva.BtnPlayer4();
         break;
       default:
@@ -244,7 +305,7 @@ public class Ronda : MonoBehaviour
       case 0:
         m_fElecciones.BtnPlayer5();
         break;
-      case 1:
+      case 3:
         m_fEjecutiva.BtnPlayer5();
         break;
       default:
@@ -258,7 +319,7 @@ public class Ronda : MonoBehaviour
       case 0:
         m_fElecciones.BtnPlayer6();
         break;
-      case 1:
+      case 3:
         m_fEjecutiva.BtnPlayer6();
         break;
       default:
@@ -272,7 +333,7 @@ public class Ronda : MonoBehaviour
       case 0:
         m_fElecciones.BtnPlayer7();
         break;
-      case 1:
+      case 3:
         m_fEjecutiva.BtnPlayer7();
         break;
       default:
@@ -286,7 +347,7 @@ public class Ronda : MonoBehaviour
       case 0:
         m_fElecciones.BtnPlayer8();
         break;
-      case 1:
+      case 3:
         m_fEjecutiva.BtnPlayer8();
         break;
       default:
@@ -300,7 +361,7 @@ public class Ronda : MonoBehaviour
       case 0:
         m_fElecciones.BtnPlayer9();
         break;
-      case 1:
+      case 3:
         m_fEjecutiva.BtnPlayer9();
         break;
       default:
@@ -314,7 +375,7 @@ public class Ronda : MonoBehaviour
       case 0:
         m_fElecciones.BtnPlayer10();
         break;
-      case 1:
+      case 3:
         m_fEjecutiva.BtnPlayer10();
         break;
       default:

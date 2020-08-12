@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class preGameManager : MonoBehaviour
 {
@@ -55,5 +56,10 @@ public class preGameManager : MonoBehaviour
         readybutton.GetComponent<Button>().interactable = false;
       }
     }
+  }
+
+  public void back()
+  {
+    SceneManager.LoadScene("SelectMode");
   }
 }

@@ -10,15 +10,24 @@ public class Elecciones : MonoBehaviour
   public bool g_isChancellor = false;
   public bool g_isPhase = false;
 
+  public bool specialSelection = false;
+
   public int g_usuarios = 5;
   public int g_idPresident = 1;
+  public int g_savedidPresident = 1;
+  public int g_specialIDPresident = 1;
   public int g_idOldPresident = -1;
+  public int g_savedidOldPresident = -1;
   public int g_idChancellor = 0;
+  public int g_savedidChancellor = 0;
   public int g_idOldChancellor = -1;
+  public int g_savedidOldChancellor = -1;
   public int g_phase = 0; //0 = Elección, 1 = Votación, 2 = Espera sig turno
   int g_turnCount = 0;
   int g_noCount = 0;
   int g_iteratorPlayers = 0;
+
+  public int typeTopCard;
 
   public int[] g_listPlayerVote; //Lista donde se van a agregar los si o no
 
@@ -35,45 +44,20 @@ public class Elecciones : MonoBehaviour
   public GameObject g_BtnNextTurn;
 
   gameManager refGameMan;
+  sesionLegislativa refLeg;
+
+  public bool putTheTopCard = false;
   //Llamamos esta función cuando queramos y siempre será para el inicio
   //Reiniciar o pruebas
   public void OnStart()
   {
     refGameMan = FindObjectOfType<gameManager>();
+    refLeg = FindObjectOfType<sesionLegislativa>();
     //Crear y setearle un ID  a los jugadores
     g_usuarios = FindObjectOfType<Seleccion_Roll>().numPlayers;
     g_idPresident = 0;
     //
 
-  }
-
-  void Start()
-  {
-    //Inicializamos a los jugadores
-    //OnStart();
-  }
-
-  // Update is called once per frame
-  void Update()
-  {
-    //switch (g_phase)
-    // {
-    //
-    //     case 0:
-    //         PhaseElection();
-    //         break;
-    //
-    //     case 1:
-    //          PhaseVotation();
-    //         break;
-    //
-    //     case 2:
-    //           //WaitingNextTurn();
-    //         break;
-    //
-    //     default:
-    //         break;
-    // }
   }
 
   public void onUpdate()
@@ -131,7 +115,8 @@ public class Elecciones : MonoBehaviour
       g_BtnYes.SetActive(true);
       g_BtnNo.SetActive(true);
 
-      g_currentPlayerTxt.GetComponent<Text>().text = "vota por ";
+      //g_currentPlayerTxt.GetComponent<Text>().text = "vota por ";
+      g_currentPlayerTxt.GetComponent<Text>().text = Traslate.getTxtVoteFor();
       g_currentPlayerTxt.GetComponent<Text>().text += g_Players[g_idChancellor].GetComponent<Jugador>().Apodo;
 
       //g_listPlayerVote = new int[g_usuarios];
@@ -139,7 +124,8 @@ public class Elecciones : MonoBehaviour
       return;
     }
     //Esto se cambiara a cada pantalla
-    g_currentPlayerTxt.GetComponent<Text>().text = "vota por ";
+    //g_currentPlayerTxt.GetComponent<Text>().text = "vota por ";
+    g_currentPlayerTxt.GetComponent<Text>().text = Traslate.getTxtVoteFor();
     g_currentPlayerTxt.GetComponent<Text>().text +=g_Players[g_idChancellor].GetComponent<Jugador>().Apodo;
     /*
     if (g_iteratorPlayers >= g_usuarios)
@@ -182,6 +168,11 @@ public class Elecciones : MonoBehaviour
     }
     else
     {
+      //if (true && refGameMan.g_Players[g_idChancellor].GetComponent<Jugador>().Rol == 2)
+      if (refGameMan.canWinFascist && refGameMan.g_Players[g_idChancellor].GetComponent<Jugador>().Rol == 2)
+      {
+        refGameMan.fascistWon = true;
+      }
       g_phase++;
       g_idOldPresident = g_idPresident;
       g_idOldChancellor = g_idChancellor;
@@ -191,6 +182,8 @@ public class Elecciones : MonoBehaviour
       g_BtnNo.SetActive(false);
 
       g_iteratorPlayers = 0;
+
+      g_noCount = 0;
 
       g_currentPlayerTxt.GetComponent<Text>().text = g_iteratorPlayers.ToString();
 
@@ -204,18 +197,34 @@ public class Elecciones : MonoBehaviour
     g_phase = 0;
     g_isChancellor = false;
     g_isPhase = false;
-
+    if (specialSelection)
+    {
+      g_idPresident = g_savedidPresident;
+      g_idOldPresident = g_savedidOldPresident;
+      g_savedidPresident = -1;
+      g_savedidOldPresident = -1;
+      specialSelection = false;
+    }
     g_Players[g_idPresident].GetComponent<Jugador>().Cargo = 0;
     g_idPresident++;
-    if (g_idPresident == g_idOldPresident)
-    {
-      g_idPresident++;
-    }
 
-    if (g_idPresident >= g_usuarios)
+    while (true)
     {
-      g_idPresident = 0;
+      if (g_idPresident != g_idOldPresident && g_idPresident < g_usuarios && !g_Players[g_idPresident].GetComponent<Jugador>().bIsDead)
+        break;
+      g_idPresident++;
+      if (g_idPresident >= g_usuarios)
+        g_idPresident = 0;
     }
+    //if (g_idPresident == g_idOldPresident)
+    //{
+    //  g_idPresident++;
+    //}
+    //
+    //if (g_idPresident >= g_usuarios)
+    //{
+    //  g_idPresident = 0;
+    //}
 
     g_Players[g_idPresident].GetComponent<Jugador>().Cargo = 1;
 
@@ -236,6 +245,9 @@ public class Elecciones : MonoBehaviour
     if (g_noCount > 3)
     {
       g_noCount = 0;
+      refLeg.addTopCard(ref typeTopCard);
+      putTheTopCard = true;
+      //agregar la carta de arriba
     }
   }
 
@@ -291,7 +303,7 @@ public class Elecciones : MonoBehaviour
         for (int i = 0; i < g_usuarios; i++)
         {
           //Solo es color del boton
-          if (i < g_usuarios && i != g_idPresident && i != g_idOldPresident && i != g_idOldChancellor)
+          if (i < g_usuarios && i != g_idPresident && i != g_idOldPresident && i != g_idOldChancellor&&! g_Players[i].GetComponent<Jugador>().bIsDead)
           {
             g_BtnPlayers[i].SetActive(true);
             g_BtnPlayers[i].GetComponent<Button>().GetComponentInChildren<Text>().text = g_Players[i].GetComponent<Jugador>().Apodo;
@@ -406,6 +418,21 @@ public class Elecciones : MonoBehaviour
   //Funcion de botones extra 
   public void BtnYes()
   {
+    if (refLeg.bDoingVeto)
+    {
+      if (refGameMan.bServer)
+      {
+        //refLeg.veto();
+        refGameMan.refServer.realizeVeto();
+      }
+      else
+      {
+        Net_MessageTest nt = new Net_MessageTest();
+        nt.Test = "vetoyes";
+        refGameMan.refCliente.SendeServer(nt);
+      }
+      return;
+    }
     //g_listPlayerVote[g_iteratorPlayers] = 1;
     if (refGameMan.bServer)
     {
@@ -425,6 +452,20 @@ public class Elecciones : MonoBehaviour
   }
   public void BtnNO()
   {
+    if (refLeg.bDoingVeto)
+    {
+      if (refGameMan.bServer)
+      {
+        refGameMan.refServer.cancelVeto();
+      }
+      else
+      {
+        Net_MessageTest nt = new Net_MessageTest();
+        nt.Test = "vetono";
+        refGameMan.refCliente.SendeServer(nt);
+      }
+      return;
+    }
     //g_listPlayerVote[g_iteratorPlayers] = 1;
     if (refGameMan.bServer)
     {
@@ -448,20 +489,36 @@ public class Elecciones : MonoBehaviour
     g_isPhase = false;
 
     g_Players[g_idPresident].GetComponent<Jugador>().Cargo = 0;
-    g_idPresident++;
-    if (g_idPresident == g_idOldPresident)
+    if (!specialSelection)
     {
       g_idPresident++;
-    }
 
-    if (g_idPresident >= g_usuarios)
-    {
-      g_idPresident = 0;
+      while (true)
+      {
+        if (g_idPresident != g_idOldPresident && g_idPresident < g_usuarios && !g_Players[g_idPresident].GetComponent<Jugador>().bIsDead)
+          break;
+        g_idPresident++;
+        if (g_idPresident >= g_usuarios)
+          g_idPresident = 0;
+      }
     }
+    //if (g_idPresident == g_idOldPresident)
+    //{
+    //  g_idPresident++;
+    //
+    //}
+    //
+    //if (g_idPresident >= g_usuarios)
+    //{
+    //  g_idPresident = 0;
+    //}
 
     g_Players[g_idPresident].GetComponent<Jugador>().Cargo = 1;
 
-    g_Players[g_idChancellor].GetComponent<Jugador>().Cargo = 0;
+    if (g_idChancellor!=-1)
+    {
+      g_Players[g_idChancellor].GetComponent<Jugador>().Cargo = 0;
+    }
 
     g_noCount = 0;
     g_isChancellor = false;
@@ -471,7 +528,6 @@ public class Elecciones : MonoBehaviour
     {
       refGameMan.refServer.bWaitingGame = true;
     }
-
   }
 
   public void hidePlayers()
@@ -533,15 +589,6 @@ public class Elecciones : MonoBehaviour
         if (i < g_usuarios)
         {
           g_BtnPlayers[i].SetActive(false);
-          g_BtnPlayers[i].GetComponent<Button>().GetComponentInChildren<Text>().text = g_Players[i].GetComponent<Jugador>().Apodo;
-
-          ColorBlock ColorButton = g_BtnPlayers[i].GetComponent<Button>().colors;
-
-          ColorButton.highlightedColor = Color.blue;
-          ColorButton.normalColor = Color.white;
-          ColorButton.pressedColor = Color.gray;
-
-          g_BtnPlayers[i].GetComponent<Button>().colors = ColorButton;
         }
         else
         {
