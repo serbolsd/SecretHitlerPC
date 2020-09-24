@@ -1,0 +1,30 @@
+Lang Code	EN	PL	ES	DE	FR	JP
+^text_play	PLAY	Zagraj teraz!	JUGAR	Jsetzt spielen!	Joue maintenant!	プレイ
+^text_quit	QUIT	Wyjdź	SALIR	Ausgang	Quitter	退出する
+^text_exit	EXIT	Wyjdź	SALIR	Ausgang	Quitter	退出する
+^text_settings	SETTINGS	Ustawienia	CONFIGURACIÓN	Einstellungen	Réglages	設定
+^text_settingsMenu	Settings:	Ustawienia	Configuración:	Einstellungen	Réglages	設定
+^text_audio	Audio	Ustawienia	Audio	Einstellungen	Réglages	設定
+^text_Effects	Effects	Ustawienia	Efectos	Einstellungen	Réglages	設定
+^text_settingsD	SETTINGS	Ustawienia	CONFIG.	Einstellungen	Réglages	設定
+^text_Language	LANGUAGE	Ustawienia	LENGUAJE	Einstellungen	Réglages	設定
+^text_LanguageD	Language	Ustawienia	Lenguaje	Einstellungen	Réglages	設定
+^text_main	MAIN	Ustawienia	MAIN	Einstellungen	Réglages	設定
+^text_rules	RULES	Ustawienia	REGLAS	Einstellungen	Réglages	設定
+^text_SelecetMode	Who are you?	Ustawienia	¿Quien eres?	Einstellungen	Réglages	設定
+^text_with_two_params	Parameter1: {0} Parameter2: {1}	Parametr1: {0} Parametr2: {1}	Parámetro1: {0} Parámetro2: {1}	Parameter1: {0} Parameter2: {1}	Paramètre1: {0} Paramètre2: {1}	パラメーター {0} パラメーター {1}
+^text_with_new_lines	Settings\nSettings	Ustawienia\nUstawienia	Configuración\nConfiguración	Einstellungen\nEinstellungen	Réglages\nRéglages	設定\n設定
+^text_new_lines_and_params	Parameter1: {0}\nParameter2: {1}\nParameter3: {2}	Parametr1: {0}\nParametr2: {1}\nParametr3: {2}	Parámetro1: {0}\nParámetro2: {1}\nParámetro3: {2}	Parameter1: {0}\nParameter2: {1}\nParameter3: {2}	Paramètre1: {0}\nParamètre2: {1}\nParamètre3: {2}	パラメーター {0}\n パラメーター {1}\n パラメーター {2}
+^language	LANGUAGE	JĘZYK	IDIOMA	SPRACHE	LANGUE	言語
+^text_server	Server	none	Servidor	none	none	none
+^text_client	Client	none	Cliente	none	none	none
+^text_connect	Connect	none	Conectarse	none	none	none
+^text_ready	Ready	none	Listo	none	none	none
+^text_Back	Back	none	Volver	none	none	none
+^text_MyPlay	Play	none	Jugar	none	none	none
+^text_IP	Address	none	Dirección	none	none	none
+^text_Metting	Metting	none	Dirección	none	none	none
+^text_IPWhite	IP...	none	IP...	none	none	none
+^text_NickName	Nickname	none	Apodo	none	none	none
+^text_NickNameWhite	Nickname...	none	Apodo...	none	none	none
+^text_comming	For the next refoem.	none	Para la próxima reforma	none	none	none

@@ -6,6 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Main.unity
+    path: Assets/Scenes/MainMenu.unity
+    guid: 4dd7c8ebdce3682479a94149a56774bc
+  - enabled: 1
+    path: Assets/Scenes/SelectMode.unity
+    guid: b85f9f432d65e814290b38ff2934e828
+  - enabled: 1
+    path: Assets/Server.unity
+    guid: 2c2902fbabeb85948a336085d446dd68
+  - enabled: 1
+    path: Assets/Client.unity
+    guid: f13624d00feed7249bcb724c014299a5
+  - enabled: 1
+    path: Assets/Scenes/GameServer.unity
+    guid: b977a74d035e6f2429a47595f79b1b7e
+  - enabled: 0
+    path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Honeti/I18N/Scenes/example_text.unity
+    guid: 541a89ba0fd05ce44b88e4fe79bcc645
   m_configObjects: {}
