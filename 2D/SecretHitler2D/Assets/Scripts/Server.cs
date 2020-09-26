@@ -67,6 +67,13 @@ public class Server : MonoBehaviour
     string ipv4 = IPManager.GetIP(ADDRESSFAM.IPv4);
     //string ipv6 = IPManager.GetIP(ADDRESSFAM.IPv6);
     m_ip.text = ipv4;
+    string savedapodo="";
+
+    if (saveName.loadName(ref savedapodo))
+    {
+      m_myApodo.text = savedapodo;
+    }
+
 
   }
   public void Shutdown()
@@ -123,13 +130,20 @@ public class Server : MonoBehaviour
         break;
       case NetworkEventType.DisconnectEvent:
         Debug.Log(string.Format("User has dissconected" + connectionId));
-        conections.Remove(connectionId);
-        int idToRemove = playerId[connectionId];
-        playerId.Remove(connectionId);
-        playerRedyDic.Remove(idToRemove);
-        playerVoteDic.Remove(idToRemove);
-        playerApode.Remove(idToRemove);
-        Debug.Log(playerRedyDic.Count);
+        if (!bInGameScene)
+        {
+          conections.Remove(connectionId);
+          int idToRemove = playerId[connectionId];
+          playerId.Remove(connectionId);
+          playerRedyDic.Remove(idToRemove);
+          playerVoteDic.Remove(idToRemove);
+          playerApode.Remove(idToRemove);
+          Debug.Log(playerRedyDic.Count);
+        }
+        else
+        {
+
+        }
         break;
       case NetworkEventType.DataEvent:
         Debug.Log(string.Format("Data", connectionId));
@@ -424,6 +438,8 @@ public class Server : MonoBehaviour
       playerRedyDic[i] = 0;
     }
     playerRedyDic[0] = 1;
+
+
     SceneManager.LoadScene("GameServer");
   }
 
@@ -431,6 +447,10 @@ public class Server : MonoBehaviour
   {
     UpdateMEssagePump();
     canInitGame = true;
+
+    string name = m_myApodo.text;
+    saveName.savename(ref name);
+
     if (m_myApodo.text.Length<3)
     {
       GetComponent<Ready>().readybutton.GetComponent<Button>().interactable = false;

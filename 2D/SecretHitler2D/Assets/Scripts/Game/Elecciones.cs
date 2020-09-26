@@ -107,6 +107,13 @@ public class Elecciones : MonoBehaviour
       if (refGameMan.bServer)
       {
         refGameMan.refServer.bWaitingGame = true;
+        for (int i = 0; i < refGameMan.refServer.playerVoteDic.Count; i++)
+        {
+          if (!refGameMan.g_Players[i].GetComponent<Jugador>().connected)
+          {
+            refGameMan.refServer.playerVoteDic[refGameMan.refServer.playerId[i]] = 2;
+          }
+        }
       }
       g_isPhase = true;
 
@@ -288,12 +295,25 @@ public class Elecciones : MonoBehaviour
     {
       draw = false;
       g_isPhase = true;
+      if (refGameMan.bServer && !refGameMan.g_Players[g_idPresident].GetComponent<Jugador>().connected)
+      {
+        draw = false;
+        g_isPhase = true;
+        int selection = Random.Range(0, g_usuarios - 1);
+        while (selection == g_idPresident || selection == g_idOldPresident || g_Players[selection].GetComponent<Jugador>().bIsDead)
+        {
+          selection = Random.Range(0, g_usuarios - 1);
+        }
+        ChancellorSelected(selection);
+        return;
+      }
     }
     else if (!refGameMan.bServer && refGameMan.idConection != g_idPresident)
     {
       draw = false;
       g_isPhase = true;
     }
+
 
     if (draw)
     {

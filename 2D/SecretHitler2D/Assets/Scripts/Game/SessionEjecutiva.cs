@@ -211,6 +211,13 @@ public class SessionEjecutiva : MonoBehaviour
         refman.refServer.bWaitingGame = true;
       }
     }
+    else
+    {
+      if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
+      {
+        OKbutton();
+      }
+    }
   }
 
   public void hideButtonOkAndTextPower()
@@ -242,7 +249,6 @@ public class SessionEjecutiva : MonoBehaviour
       default:
         break;
     }
-    //refman.refServer.bWaitingGame = true;
   }
 
   public void OKbutton()
@@ -394,6 +400,11 @@ public class SessionEjecutiva : MonoBehaviour
     }
     if (bAlredyInitPhase)
     {
+      if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
+      {
+        OKbutton();
+        return;
+      }
       return;
     }
     PowerToSelectPlayer = 1;
@@ -452,6 +463,51 @@ public class SessionEjecutiva : MonoBehaviour
     //HACERLAS CON SERGIO 
     if (bAlredyInitPhase)
     {
+      if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
+      {
+        int selection = Random.Range(0, refElec.g_usuarios - 1);
+        while (selection == refElec.g_idPresident || refman.g_Players[selection].GetComponent<Jugador>().bIsDead)
+        {
+          selection = Random.Range(0, refElec.g_usuarios - 1);
+        }
+        //ChancellorSelected(selection);
+        switch (selection)
+        {
+          case 0:
+            BtnPlayer1();
+            break;
+          case 1:
+            BtnPlayer2();
+            break;
+          case 2:
+            BtnPlayer3();
+            break;
+          case 3:
+            BtnPlayer4();
+            break;
+          case 4:
+            BtnPlayer5();
+            break;
+          case 5:
+            BtnPlayer6();
+            break;
+          case 6:
+            BtnPlayer7();
+            break;
+          case 7:
+            BtnPlayer8();
+            break;
+          case 8:
+            BtnPlayer9();
+            break;
+          case 9:
+            BtnPlayer10();
+            break;
+          default:
+            break;
+        }
+        return;
+      }
       return;
     }
     PowerToSelectPlayer = 2;
@@ -508,6 +564,13 @@ public class SessionEjecutiva : MonoBehaviour
   public void revisionDePolizas()
   {
     PowerToSelectPlayer = 3;
+
+    if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
+    {
+      OKbutton();
+      return;
+    }
+
     if (refman.bServer&&!bAlredyInitPhase)
     {
       refLeg.baraja.getTop(ref cardsToPreviewTop);
@@ -620,6 +683,51 @@ public class SessionEjecutiva : MonoBehaviour
   {
     if (bAlredyInitPhase || bhideButtons)
     {
+      if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
+      {
+        int selection = Random.Range(0, refElec.g_usuarios - 1);
+        while (selection == refElec.g_idPresident || refman.g_Players[selection].GetComponent<Jugador>().bIsDead)
+        {
+          selection = Random.Range(0, refElec.g_usuarios - 1);
+        }
+        //ChancellorSelected(selection);
+        switch (selection)
+        {
+          case 0:
+            BtnPlayer1();
+            break;
+          case 1:
+            BtnPlayer2();
+            break;
+          case 2:
+            BtnPlayer3();
+            break;
+          case 3:
+            BtnPlayer4();
+            break;
+          case 4:
+            BtnPlayer5();
+            break;
+          case 5:
+            BtnPlayer6();
+            break;
+          case 6:
+            BtnPlayer7();
+            break;
+          case 7:
+            BtnPlayer8();
+            break;
+          case 8:
+            BtnPlayer9();
+            break;
+          case 9:
+            BtnPlayer10();
+            break;
+          default:
+            break;
+        }
+        return;
+      }
       return;
     }
     PowerToSelectPlayer = 0;

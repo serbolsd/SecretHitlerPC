@@ -14,6 +14,7 @@ public class gameManager : MonoBehaviour
   public GameObject g_PrefabPlayer;
   public GameObject[] g_Players;
   public int m_numUsuarios;
+  public int m_numPlayers;
   public bool canWinFascist = false;
   public bool fascistWon = false;
   public bool liberalWon = false;
@@ -45,8 +46,9 @@ public class gameManager : MonoBehaviour
     FindObjectOfType<Seleccion_Roll>().createRole();
     FindObjectOfType<afiliaciones>().darAfiliacion();
     refRonda.onStart();
-    g_Players = new GameObject[FindObjectOfType<Seleccion_Roll>().numPlayers];
-    for (int i = 0; i < FindObjectOfType<Seleccion_Roll>().numPlayers; i++)
+    m_numPlayers = FindObjectOfType<Seleccion_Roll>().numPlayers;
+    g_Players = new GameObject[m_numPlayers];
+    for (int i = 0; i < m_numPlayers; i++)
     {
       g_Players[i] = Instantiate(g_PrefabPlayer, this.transform);
     }
@@ -59,6 +61,7 @@ public class gameManager : MonoBehaviour
       g_Players[i].GetComponent<Jugador>().Cargo = 0;
       g_Players[i].GetComponent<Jugador>().Rol = FindObjectOfType<Seleccion_Roll>().idsRol[i];
       g_Players[i].GetComponent<Jugador>().afil = FindObjectOfType<afiliaciones>().afil[i];
+      g_Players[i].GetComponent<Jugador>().connected = true;
       if ("Fascista" == g_Players[i].GetComponent<Jugador>().afil)
       {
         g_Players[i].GetComponent<Jugador>().idAfiliation = 1;
@@ -76,7 +79,7 @@ public class gameManager : MonoBehaviour
          g_Players[i].GetComponent<Jugador>().Apodo = refServer.playerApode[i];
       }
     }
-    for (int i = 0; i < FindObjectOfType<Seleccion_Roll>().numPlayers; i++)
+    for (int i = 0; i < m_numPlayers; i++)
     {
       //Genera una instancia del prefab
       //Al ponerlo en la posición this lo vuelve su hijo

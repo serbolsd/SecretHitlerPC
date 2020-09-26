@@ -25,6 +25,7 @@ public class preGameManager : MonoBehaviour
       refClient = FindObjectOfType<Client>();
       if (refClient)
       {
+        refClient.loadApodo();
         //refClient.Init();
       }
       else

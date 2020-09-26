@@ -64,6 +64,16 @@ public class Client : MonoBehaviour
     }
   }
 
+  public void loadApodo()
+  {
+    string savedapodo = "";
+
+    if (saveName.loadName(ref savedapodo))
+    {
+      m_myApodo.text = savedapodo;
+    }
+  }
+
   public void conectToServer()
   {
     ServerIP = m_ipInput.text;
@@ -768,6 +778,9 @@ public class Client : MonoBehaviour
 
   public void preGameUpdate()
   {
+    string name = m_myApodo.text;
+    saveName.savename(ref name);
+
     if (m_myApodo.text.Length<3 || connected)
     {
       connectButtom.GetComponent<Button>().interactable = false;

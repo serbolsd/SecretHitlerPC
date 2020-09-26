@@ -23,7 +23,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
+  - enabled: 0
     path: Assets/Honeti/I18N/Scenes/example_text.unity
     guid: 541a89ba0fd05ce44b88e4fe79bcc645
   m_configObjects: {}

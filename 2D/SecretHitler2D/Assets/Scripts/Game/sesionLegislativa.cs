@@ -71,6 +71,10 @@ public class sesionLegislativa : MonoBehaviour
   }
   public void takeCardsFase()
   {
+    if (m_gameMan.bServer && !m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().connected)
+    {
+      takeCards();
+    }
     if (m_gameMan.idConection != m_eleccionsData.g_idPresident)
     {
       return;
@@ -168,6 +172,23 @@ public class sesionLegislativa : MonoBehaviour
 
   void PresidentSelection()
   {
+    if (m_gameMan.bServer && !m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().connected)
+    {
+      int slecction = Random.Range(0, 2);
+      switch (slecction)
+      {
+        case 0:
+          selectCard1();
+          break;
+        case 1:
+          selectCard2();
+          break;
+        case 2:
+          selectCard3();
+          break;
+      }
+    }
+
     if (m_gameMan.idConection != m_eleccionsData.g_idPresident || alredySelectedCard)
     {
       return;
@@ -232,6 +253,20 @@ public class sesionLegislativa : MonoBehaviour
 
   void CansillerSelection()
   {
+    if (m_gameMan.bServer && !m_gameMan.g_Players[m_eleccionsData.g_idChancellor].GetComponent<Jugador>().connected)
+    {
+      int slecction = Random.Range(0, 1);
+      switch (slecction)
+      {
+        case 0:
+          selectCard1();
+          break;
+        case 1:
+          selectCard2();
+          break;
+      }
+    }
+
     if (m_gameMan.idConection != m_eleccionsData.g_idChancellor || alredySelectedCard)
     {
       return;
