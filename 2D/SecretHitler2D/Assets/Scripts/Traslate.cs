@@ -412,4 +412,12 @@ public class Traslate : MonoBehaviour
     }
     return str;
   }
+
+  // El presidente esta eligiendo el canciller
+  // Esperando a que todos voten
+  // El presidente esta tomando las cartas
+  // El presidente esta descartando carta
+  // El canciller esta colocanco la carta
+  // Esperando a que se ejecute el poder
+
 }
