@@ -300,7 +300,7 @@ public class Elecciones : MonoBehaviour
         draw = false;
         g_isPhase = true;
         int selection = Random.Range(0, g_usuarios - 1);
-        while (selection == g_idPresident || selection == g_idOldPresident || g_Players[selection].GetComponent<Jugador>().bIsDead)
+        while (selection == g_idPresident || selection == g_idOldPresident || selection == g_idOldChancellor || g_Players[selection].GetComponent<Jugador>().bIsDead)
         {
           selection = Random.Range(0, g_usuarios - 1);
         }

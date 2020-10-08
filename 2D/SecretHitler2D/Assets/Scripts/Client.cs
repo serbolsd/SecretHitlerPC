@@ -31,6 +31,7 @@ public class Client : MonoBehaviour
   public bool bInGameScene = false;
   public bool wait = false;
   public bool connected = false;
+  public bool reconnecting = false;
 
   public int m_numPlayers;
 
@@ -156,6 +157,11 @@ public class Client : MonoBehaviour
         break;
       case NetworkEventType.DisconnectEvent:
         Debug.Log(string.Format("dissconected", connectionId));
+        if (bInGameScene)
+        {
+          connected = false;
+          //reconnecting = true;
+        }
         break;
       case NetworkEventType.DataEvent:
         //Debug.Log(string.Format("Data", connectionId));
@@ -259,6 +265,10 @@ public class Client : MonoBehaviour
     }
     else
     {
+      if (msg.Test.Contains("redata"))
+      {
+        reconnectData(ref msg);
+      }
       if (msg.Test.Contains("doVeto"))
       {
         refSesionLegislativa.precidentDecideForVeto();
@@ -523,6 +533,10 @@ public class Client : MonoBehaviour
         }
         else if (msg.Test.Contains("elec1"))
         {
+          if (msg.Test.Contains("continue"))
+          {
+            wait = false;
+          }
           refElecciones.hidePlayers();
           refElecciones.g_phase = 1;
           refElecciones.g_isPhase = false;
@@ -765,6 +779,56 @@ public class Client : MonoBehaviour
       }
     }
   }
+
+  void reconnectData(ref Net_MessageTest msg)
+  {
+    if (msg.Test.Contains("player0dead"))
+      refGManaer.g_Players[0].GetComponent<Jugador>().bIsDead = true;
+    if (msg.Test.Contains("player1dead"))
+      refGManaer.g_Players[1].GetComponent<Jugador>().bIsDead = true;
+    if (msg.Test.Contains("player2dead"))
+      refGManaer.g_Players[2].GetComponent<Jugador>().bIsDead = true;
+    if (msg.Test.Contains("player3dead"))
+      refGManaer.g_Players[3].GetComponent<Jugador>().bIsDead = true;
+    if (msg.Test.Contains("player4dead"))
+      refGManaer.g_Players[4].GetComponent<Jugador>().bIsDead = true;
+    if (msg.Test.Contains("player5dead"))
+      refGManaer.g_Players[5].GetComponent<Jugador>().bIsDead = true;
+    if (msg.Test.Contains("player6dead"))
+      refGManaer.g_Players[6].GetComponent<Jugador>().bIsDead = true;
+    if (msg.Test.Contains("player7dead"))
+      refGManaer.g_Players[7].GetComponent<Jugador>().bIsDead = true;
+    if (msg.Test.Contains("player8dead"))
+      refGManaer.g_Players[8].GetComponent<Jugador>().bIsDead = true;
+    if (msg.Test.Contains("player9dead"))
+      refGManaer.g_Players[9].GetComponent<Jugador>().bIsDead = true;
+
+    if (msg.Test.Contains("fascistas1"))
+      refSesionLegislativa.baraja.setNumFascistaPuestas(1);
+    if (msg.Test.Contains("fascistas2"))
+      refSesionLegislativa.baraja.setNumFascistaPuestas(2);
+    if (msg.Test.Contains("fascistas3"))
+      refSesionLegislativa.baraja.setNumFascistaPuestas(3);
+    if (msg.Test.Contains("fascistas4"))
+      refSesionLegislativa.baraja.setNumFascistaPuestas(4);
+    if (msg.Test.Contains("fascistas5"))
+      refSesionLegislativa.baraja.setNumFascistaPuestas(5);
+    if (msg.Test.Contains("fascistas6"))
+      refSesionLegislativa.baraja.setNumFascistaPuestas(6);
+
+    if (msg.Test.Contains("liberales1"))
+      refSesionLegislativa.baraja.setNumLiberalPuestas(1);
+    if (msg.Test.Contains("liberales2"))
+      refSesionLegislativa.baraja.setNumLiberalPuestas(2);
+    if (msg.Test.Contains("liberales3"))
+      refSesionLegislativa.baraja.setNumLiberalPuestas(3);
+    if (msg.Test.Contains("liberales4"))
+      refSesionLegislativa.baraja.setNumLiberalPuestas(4);
+    if (msg.Test.Contains("liberales5"))
+      refSesionLegislativa.baraja.setNumLiberalPuestas(5);
+
+  }
+
   #endregion
   public void FormatTestData()
   {
@@ -811,7 +875,67 @@ public class Client : MonoBehaviour
 
   public void gameUpdate()
   {
-    UpdateMEssagePump();
+    if (reconnecting)
+    {
+      reconnect();
+    }
+    else
+    { 
+      UpdateMEssagePump();
+    }
   }
+
+  public void reconnect()
+  {
+    if (tryToConnect())
+    {
+      reconnecting = false;
+      Net_MessageTest nt = new Net_MessageTest();
+      nt.Test = "reconnect";
+      Debug.Log(connectionid);
+      SendeServer(nt);
+    }
+  }
+
+  bool tryToConnect()
+  {
+    if (connected)
+    {
+      return true;
+    }
+    NetworkTransport.Init();
+    ConnectionConfig cc = new ConnectionConfig();
+    ReliableChannel = cc.AddChannel(QosType.Reliable);
+    HostTopology top = new HostTopology(cc, Users);
+
+    HostId = NetworkTransport.AddHost(top, 0);
+#if UNITY_WEBGL && !UNITY_EDITOR
+        NetworkTransport.Connect(HostId, ServerIP, Web, 0, out error);
+#else
+    connectionid = NetworkTransport.Connect(HostId, ServerIP, Port, 0, out error);
+#endif
+    ColorBlock color = connectButtom.GetComponent<Button>().colors;
+    if (NetworkError.Ok != (NetworkError)error)
+    {
+      Debug.Log("couldn't connectButtom");
+      return false;
+    }
+    else
+    {
+      Debug.Log("connected");
+      connected = true;
+      return true;
+    }
+    Debug.Log(string.Format("Puerto{0}", ServerIP));
+    return false;
+  }
+
+
+  public void disconectedTest()
+  {
+    NetworkManager.singleton.client.Disconnect();
+    connected = false;
+  }
+
 }
 

@@ -93,9 +93,22 @@ public class Server : MonoBehaviour
         return id;
       }
       id++;
-
     }
     return id;
+  }
+
+  void reorganizeIdPlayers()
+  {
+    int id = 0;
+    for (int i = 0; i < conections.Count; i++)
+    {
+      playerId[conections[i]] = id;
+      id++;
+      Net_MessageTest nt = new Net_MessageTest();
+      nt.Test = "yourid_";
+      nt.Test += id;
+      SendClient(conections[i], nt);
+    }
   }
 
   public void UpdateMEssagePump()
@@ -114,22 +127,29 @@ public class Server : MonoBehaviour
       case NetworkEventType.Nothing:
         break;
       case NetworkEventType.ConnectEvent:
-        Debug.Log(string.Format("User has connected" + connectionId));
-        //playerRedy.Add(0);
-        int id = setIdToPlayer();
-        playerId.Add(connectionId, id);
-        conections.Add(connectionId);
-        playerRedyDic.Add(id, 0);
-        playerVoteDic.Add(id, 0);
-        playerApode.Add(id,"");
-        Net_MessageTest nt = new Net_MessageTest();
-        nt.Test = "yourid_";
-        nt.Test += id;
-        SendClient(connectionId, nt);
-        Debug.Log(playerRedyDic.Count);
+        //Debug.Log(string.Format("User has connected" + connectionId));
+        if (!bInGameScene)
+        {
+          //playerRedy.Add(0);
+          int id = setIdToPlayer();
+          playerId.Add(connectionId, id);
+          conections.Add(connectionId);
+          playerRedyDic.Add(id, 0);
+          playerVoteDic.Add(id, 0);
+          playerApode.Add(id,"");
+          Net_MessageTest nt = new Net_MessageTest();
+          nt.Test = "yourid_";
+          nt.Test += id;
+          SendClient(connectionId, nt);
+          Debug.Log(playerRedyDic.Count);
+        }
+        else
+        {
+          refGameMan.g_Players[playerId[connectionId]].GetComponent<Jugador>().connected = true;
+        }
         break;
       case NetworkEventType.DisconnectEvent:
-        Debug.Log(string.Format("User has dissconected" + connectionId));
+        //Debug.Log(string.Format("User has dissconected" + connectionId));
         if (!bInGameScene)
         {
           conections.Remove(connectionId);
@@ -139,10 +159,11 @@ public class Server : MonoBehaviour
           playerVoteDic.Remove(idToRemove);
           playerApode.Remove(idToRemove);
           Debug.Log(playerRedyDic.Count);
+          reorganizeIdPlayers();
         }
         else
         {
-
+          refGameMan.g_Players[playerId[connectionId]].GetComponent<Jugador>().connected = false;
         }
         break;
       case NetworkEventType.DataEvent:
@@ -201,6 +222,166 @@ public class Server : MonoBehaviour
     }
     else
     {
+      if (msg.Test.Contains("reconnect"))
+      {
+        Net_MessageTest nt = new Net_MessageTest();
+        for (int i = 0; i < conections.Count; i++)
+        {
+          nt.Test += "redata ";
+          nt.Test += "player";
+          nt.Test += playerId[conections[i]];
+          if (refGameMan.g_Players[playerId[conections[i]]].GetComponent<Jugador>().bIsDead)
+          {
+            nt.Test += "dead";
+          }
+          nt.Test += " ";
+        }
+        nt.Test += "fascistas";
+        nt.Test += refSesionLegislativa.baraja.numCartasFasColocadas;
+        nt.Test += "liberales";
+        nt.Test += refSesionLegislativa.baraja.numCartasLibColocadas;
+        nt.Test += " ";
+
+
+        if (refGameMan.fascistWon || refGameMan.liberalWon)
+        {
+          if (refGameMan.fascistWon)
+          {
+            nt.Test = "fascistwon";
+          }
+          else
+          {
+            nt.Test = "liberalwon";
+          }
+          return;
+        }
+        if (0 == rondaFase) //elecciones
+        {
+          nt.Test = "ronda0 :";
+          //refRonda.phase = 0;
+          if (refElecciones.putTheTopCard)
+          {
+            nt.Test += " topCard";
+            nt.Test += refElecciones.typeTopCard;
+            refElecciones.putTheTopCard = false;
+          }
+          if (0 == refElecciones.g_phase)
+          {
+            nt.Test += "continue ";
+            nt.Test += " elec0";
+            nt.Test += " :";
+            nt.Test += " presi";
+            nt.Test += refElecciones.g_idPresident;
+            nt.Test += " : ";
+            nt.Test += "oldpre";
+            nt.Test += refElecciones.g_idOldPresident;
+            nt.Test += " : ";
+            nt.Test += "oldcanci";
+            nt.Test += refElecciones.g_idOldChancellor;
+          }
+          if (1 == refElecciones.g_phase)
+          {
+            nt.Test += " elec1";
+            nt.Test += " : ";
+            nt.Test += "canci";
+            nt.Test += refElecciones.g_idChancellor;
+          }
+          if (2 == refElecciones.g_phase)
+          {
+            nt.Test += " elec2";
+          }
+        }
+        else if (2 == rondaFase)//legislativa
+        {
+          nt.Test = "ronda2 ";
+          if (0 == refSesionLegislativa.m_phase)
+          {
+            nt.Test += "leg0 ";
+            nt.Test += "continue ";
+          }
+          else if (1 == refSesionLegislativa.m_phase)
+          {
+            nt.Test += "leg1 ";
+            nt.Test += "car0";
+            nt.Test += refSesionLegislativa.baraja.enMano[0].GetComponent<CartaDePoliza>().tipoDeCarta;
+            nt.Test += "car1";
+            nt.Test += refSesionLegislativa.baraja.enMano[1].GetComponent<CartaDePoliza>().tipoDeCarta;
+            nt.Test += "car2";
+            nt.Test += refSesionLegislativa.baraja.enMano[2].GetComponent<CartaDePoliza>().tipoDeCarta;
+
+          }
+          else if (2 == refSesionLegislativa.m_phase)
+          {
+            nt.Test += "leg2 ";
+            nt.Test += "car0";
+            nt.Test += refSesionLegislativa.baraja.enMano[0].GetComponent<CartaDePoliza>().tipoDeCarta;
+            nt.Test += "car1";
+            nt.Test += refSesionLegislativa.baraja.enMano[1].GetComponent<CartaDePoliza>().tipoDeCarta;
+
+          }
+          else if (3 == refSesionLegislativa.m_phase)
+          {
+            nt.Test += "leg3 ";
+            if (refSesionLegislativa.baraja.bFascist)
+            {
+              nt.Test += "fascista";
+            }
+          }
+        }
+        if (3 == rondaFase) //elecciones
+        {
+          nt.Test = "ronda3 ";
+          if (0 == refSesionEjecutiva.phase)
+          {
+            nt.Test += "eje0 ";
+            nt.Test += "continue ";
+          }
+          if (1 == refSesionEjecutiva.phase)
+          {
+            nt.Test += "eje1 ";
+            switch (refSesionEjecutiva.PowerToSelectPlayer)
+            {
+              case 0:
+                break;
+              case 1:
+                break;
+              case 2:
+                break;
+              case 3:
+                nt.Test += "car0";
+                nt.Test += refSesionEjecutiva.cardsToPreviewTop[0].GetComponent<CartaDePoliza>().tipoDeCarta;
+                nt.Test += "car1";
+                nt.Test += refSesionEjecutiva.cardsToPreviewTop[1].GetComponent<CartaDePoliza>().tipoDeCarta;
+                nt.Test += "car2";
+                nt.Test += refSesionEjecutiva.cardsToPreviewTop[2].GetComponent<CartaDePoliza>().tipoDeCarta;
+                break;
+              default:
+                break;
+            }
+          }
+          if (2 == refSesionEjecutiva.phase)
+          {
+            nt.Test += "eje2 ";
+            switch (refSesionEjecutiva.PowerToSelectPlayer)
+            {
+              case 0:
+                nt.Test += "ejecuted";
+                nt.Test += refSesionEjecutiva.playerEjecuted;
+                break;
+              case 1:
+                break;
+              case 2:
+                nt.Test += "special";
+                nt.Test += refSesionEjecutiva.refElec.g_specialIDPresident;
+                break;
+              default:
+                break;
+            }
+          }
+
+          SendClient(connectionId, nt);
+        }
+      }
       if (msg.Test.Contains("doveto"))
       {
         doVeto();
@@ -368,7 +549,7 @@ public class Server : MonoBehaviour
       {
         bWaitingGame = true;
       }
-
+      
     }
 
   }
@@ -571,6 +752,10 @@ public class Server : MonoBehaviour
     {
       for (int i = 0; i < playerRedyDic.Count; i++)
       {
+        if (!refGameMan.g_Players[conections[i]].GetComponent<Jugador>().connected)
+        {
+          playerRedyDic[conections[i]] = 1;
+        }
         if (0 == playerRedyDic[conections[i]])
         {
           return;
@@ -658,6 +843,7 @@ public class Server : MonoBehaviour
         }
         if (1 == refElecciones.g_phase)
         {
+          nt.Test += "continue ";
           nt.Test += " elec1";
           nt.Test += " : ";
           nt.Test += "canci";
@@ -688,12 +874,6 @@ public class Server : MonoBehaviour
           }
         }
       }
-      //else if (1 == rondaFase)//ejecutiva
-      //{
-      //  nt.Test = "ronda1 ";
-      //
-      //
-      //}
       else if (2 == rondaFase)//legislativa
       {
         nt.Test = "ronda2 ";

@@ -180,7 +180,7 @@ public class BarajaDePolizas : MonoBehaviour
         {
           FindObjectOfType<sesionLegislativa>().bCanVeto = true;
         }
-        if (numCartasFasColocadas == 6)
+        if (numCartasLibColocadas == 5)
         {
           FindObjectOfType<gameManager>().liberalWon = true;
         }
@@ -355,5 +355,31 @@ public class BarajaDePolizas : MonoBehaviour
     desechar(0);
     desechar(1);
     enMano = new GameObject[0];
+  }
+
+  public void setNumLiberalPuestas(int num)
+  {
+    int cards = num;
+    if (cards>5)
+    {
+      cards = 5;
+    }
+    for (int i = 0; i < cards; i++)
+    {
+      liberarCards[i].SetActive(true);
+    }
+  }
+
+  public void setNumFascistaPuestas(int num)
+  {
+    int cards = num;
+    if (cards > 6)
+    {
+      cards = 6;
+    }
+    for (int i = 0; i < cards; i++)
+    {
+      facistCards[i].SetActive(true);
+    }
   }
 }

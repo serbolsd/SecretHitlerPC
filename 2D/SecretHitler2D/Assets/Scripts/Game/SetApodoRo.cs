@@ -24,6 +24,7 @@ public class SetApodoRo : MonoBehaviour
         {
           //rolNAliados.text = "Rol: Liberal";
           rolNAliados.text = Traslate.getRolLiberal();
+          rolNAliados.text += "\n";
         }
         else
         {
@@ -37,9 +38,9 @@ public class SetApodoRo : MonoBehaviour
             //rolNAliados.text = "Rol: Hitler";
             rolNAliados.text = Traslate.getRolHitler();
           }
-          rolNAliados.text += "  ";
+          rolNAliados.text += "\n";
           rolNAliados.text += Traslate.getTextToAliad(); 
-          rolNAliados.text += " ";
+          rolNAliados.text += "\n";
           for (int i = 0; i < refrols.numPlayers; i++)
           {
             if (0 != refman.g_Players[i].GetComponent<Jugador>().Rol&& refman.idConection!=i)
@@ -70,9 +71,9 @@ public class SetApodoRo : MonoBehaviour
           }
 
           //rolNAliados.text += "  Aliados: ";
-          rolNAliados.text += "  ";
+          rolNAliados.text += "\n";
           rolNAliados.text += Traslate.getTextToAliad();
-          rolNAliados.text += " ";
+          rolNAliados.text += "\n";
           for (int i = 0; i < refrols.numPlayers; i++)
           {
             if (0 != refman.g_Players[i].GetComponent<Jugador>().Rol && refman.idConection != i)
@@ -82,7 +83,7 @@ public class SetApodoRo : MonoBehaviour
               // rolNAliados.text += "Hitler-";
               //}
               rolNAliados.text += refman.g_Players[i].GetComponent<Jugador>().Apodo;
-              rolNAliados.text += ". ";
+              rolNAliados.text += ".\n";
             }
           }
 
