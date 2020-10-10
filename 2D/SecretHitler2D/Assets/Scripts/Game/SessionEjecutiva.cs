@@ -83,6 +83,7 @@ public class SessionEjecutiva : MonoBehaviour
         hideAll();
         waitingNextTurn = true;
         refLeg.baraja.canEjecutive = false;
+        HideInstructionToNoPresident();
         break;
       default:
         break;
@@ -389,6 +390,7 @@ public class SessionEjecutiva : MonoBehaviour
 
   public void verLealtad()
   {
+    instructionToNoPresident();
     if (bSeeingMembership)
     {
       if (!bAlredyDrawMembership)
@@ -460,6 +462,7 @@ public class SessionEjecutiva : MonoBehaviour
 
   public void EleccionEspecial()
   {
+    instructionToNoPresident();
     //HACERLAS CON SERGIO 
     if (bAlredyInitPhase)
     {
@@ -564,7 +567,7 @@ public class SessionEjecutiva : MonoBehaviour
   public void revisionDePolizas()
   {
     PowerToSelectPlayer = 3;
-
+    instructionToNoPresident();
     if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
     {
       OKbutton();
@@ -681,6 +684,7 @@ public class SessionEjecutiva : MonoBehaviour
 
   public void Ejecucion()
   {
+    instructionToNoPresident();
     if (bAlredyInitPhase || bhideButtons)
     {
       if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
@@ -1022,5 +1026,22 @@ public class SessionEjecutiva : MonoBehaviour
       refman.refCliente.SendeServer(nt);
     }
     phase = 2;
+  }
+
+  void instructionToNoPresident()
+  {
+    if (refman.idConection == refElec.g_idPresident)
+    {
+      return;
+    }
+    refRonda.txtIntructionFase.SetActive(true);
+    refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtTakingCardsP1();
+    refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
+      refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().Apodo;
+    refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtWaitingForPowers();
+  }
+  void HideInstructionToNoPresident()
+  {
+    refRonda.txtIntructionFase.SetActive(false);
   }
 }

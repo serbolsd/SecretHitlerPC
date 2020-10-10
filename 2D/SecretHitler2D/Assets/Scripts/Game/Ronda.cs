@@ -13,6 +13,7 @@ public class Ronda : MonoBehaviour
   public Seleccion_Roll m_roles;
   public GameObject m_initGameButton;
   public GameObject m_reRoleButton;
+  public GameObject txtIntructionFase;
 
   gameManager refGameMan;
   public GameObject[] g_BtnPlayers;

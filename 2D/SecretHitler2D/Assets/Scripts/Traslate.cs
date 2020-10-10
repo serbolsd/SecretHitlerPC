@@ -412,12 +412,298 @@ public class Traslate : MonoBehaviour
     }
     return str;
   }
+  
+  static public string getTxtSelectAChancellor()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = "choose a chancellor";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = "Elige un canciller";
+        break;
+    }
+    return str;
+  }
 
+  static public string getTxDiscardCard()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = "Discard a card";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = "Descarta una carta";
+        break;
+    }
+    return str;
+  }
+
+  static public string getTxPlaceCard()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = "Place a card";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = "Coloca una carta";
+        break;
+    }
+    return str;
+  }
   // El presidente esta eligiendo el canciller
+  static public string getTxtPickAChancellorP1()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = "The president ";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = "El presidente ";
+        break;
+    }
+    return str;
+  }
+  // El presidente esta eligiendo el canciller
+  static public string getTxtPickAChancellorP2()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = " is choosing a chancellor";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = " está eligiendo un canciller";
+        break;
+    }
+    return str;
+  }
+
   // Esperando a que todos voten
+  static public string getTxtWaitingForVote()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = "Waiting for everyone to vote";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = "Esperando a que todos voten";
+        break;
+    }
+    return str;
+  }
+
   // El presidente esta tomando las cartas
+  static public string getTxtTakingCardsP1()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = "The president ";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = "El presidente ";
+        break;
+    }
+    return str;
+  }
+
+  static public string getTxtTakingCardsP2()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = " taking cards";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = " está tomando cartas";
+        break;
+    }
+    return str;
+  }
+
   // El presidente esta descartando carta
+  static public string getTxtDiscardingCards()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = " discarding a Card";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = " está descartando una carta";
+        break;
+    }
+    return str;
+  }
+
   // El canciller esta colocanco la carta
+  static public string getTxtPlacingCardsP1()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = "The Chancellor ";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = "El Canciller ";
+        break;
+    }
+    return str;
+  }
+
+  static public string getTxtPlacingCardsP2()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = " is placing a Card";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = "  está colocando una carta";
+        break;
+    }
+    return str;
+  }
+
   // Esperando a que se ejecute el poder
+  static public string getTxtWaitingForPowers()
+  {
+    string str = "";
+    switch (Application.systemLanguage)
+    {
+      case SystemLanguage.Polish:
+        str = " ";
+        break;
+      case SystemLanguage.English:
+        str = " to execute his power";
+        break;
+      case SystemLanguage.German:
+        str = " ";
+        break;
+      case SystemLanguage.French:
+        str = " ";
+        break;
+      case SystemLanguage.Spanish:
+        str = " ejecute su poder";
+        break;
+    }
+    return str;
+  }
 
 }

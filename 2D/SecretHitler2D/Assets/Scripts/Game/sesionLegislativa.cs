@@ -17,6 +17,7 @@ public class sesionLegislativa : MonoBehaviour
   public GameObject buttonYesVeto;
   public GameObject buttonNoVeto;
   public GameObject txtPresidetnDoNoVeto;
+  public GameObject txtSelectCard;
   public BarajaDePolizas baraja;
   public gameManager m_gameMan;
   public Elecciones m_eleccionsData;
@@ -77,10 +78,17 @@ public class sesionLegislativa : MonoBehaviour
     }
     if (m_gameMan.idConection != m_eleccionsData.g_idPresident)
     {
+      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPickAChancellorP1();
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
+        m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().Apodo;
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtTakingCardsP2();
+
       return;
     }
     if (!faseAlready)
     {
+      m_gameMan.refRonda.txtIntructionFase.SetActive(false);
       buttonTakeCard.SetActive(true);
       faseAlready = true;
 
@@ -174,6 +182,12 @@ public class sesionLegislativa : MonoBehaviour
   {
     if (m_gameMan.bServer && !m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().connected)
     {
+      txtSelectCard.SetActive(false);
+      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPickAChancellorP1();
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
+        m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().Apodo;
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtDiscardingCards();
       int slecction = Random.Range(0, 2);
       switch (slecction)
       {
@@ -188,14 +202,29 @@ public class sesionLegislativa : MonoBehaviour
           break;
       }
     }
-
-    if (m_gameMan.idConection != m_eleccionsData.g_idPresident || alredySelectedCard)
+    if (alredySelectedCard)
     {
       return;
     }
+    if (m_gameMan.idConection != m_eleccionsData.g_idPresident)
+    {
+      txtSelectCard.SetActive(false);
+
+      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPickAChancellorP1();
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
+        m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().Apodo;
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtDiscardingCards();
+      return;
+    }
+
+
 
     if (m_gameMan.bServer)
     {
+      m_gameMan.refRonda.txtIntructionFase.SetActive(false);
+      txtSelectCard.SetActive(true);
+      txtSelectCard.GetComponentInChildren<Text>().text = Traslate.getTxDiscardCard();
       ColorBlock ColorButton1 = buttonPresidentCard1.GetComponent<Button>().colors;
       colorButton(ref ColorButton1, 0);
       buttonPresidentCard1.GetComponent<Button>().colors = ColorButton1;
@@ -215,6 +244,9 @@ public class sesionLegislativa : MonoBehaviour
     }
     else
     {
+      m_gameMan.refRonda.txtIntructionFase.SetActive(false);
+      txtSelectCard.SetActive(true);
+      txtSelectCard.GetComponentInChildren<Text>().text = Traslate.getTxDiscardCard();
       ColorBlock ColorButton1 = buttonPresidentCard1.GetComponent<Button>().colors;
       colorButtonForClient(ref ColorButton1, card0);
       buttonPresidentCard1.GetComponent<Button>().colors = ColorButton1;
@@ -247,6 +279,7 @@ public class sesionLegislativa : MonoBehaviour
     buttonPresidentCard1.SetActive(false);
     buttonPresidentCard2.SetActive(false);
     buttonPresidentCard3.SetActive(false);
+    txtSelectCard.SetActive(false);
     faseAlready = false;
     alredySelectedCard = false;
   }
@@ -255,6 +288,14 @@ public class sesionLegislativa : MonoBehaviour
   {
     if (m_gameMan.bServer && !m_gameMan.g_Players[m_eleccionsData.g_idChancellor].GetComponent<Jugador>().connected)
     {
+      txtSelectCard.SetActive(false);
+
+      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPlacingCardsP1();
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
+        m_gameMan.g_Players[m_eleccionsData.g_idChancellor].GetComponent<Jugador>().Apodo;
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtPlacingCardsP2();
+
       int slecction = Random.Range(0, 1);
       switch (slecction)
       {
@@ -266,13 +307,27 @@ public class sesionLegislativa : MonoBehaviour
           break;
       }
     }
-
-    if (m_gameMan.idConection != m_eleccionsData.g_idChancellor || alredySelectedCard)
+    if (alredySelectedCard)
     {
+      return;
+    }
+    if (m_gameMan.idConection != m_eleccionsData.g_idChancellor)
+    {
+      txtSelectCard.SetActive(false);
+
+      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPlacingCardsP1();
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
+        m_gameMan.g_Players[m_eleccionsData.g_idChancellor].GetComponent<Jugador>().Apodo;
+      m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtPlacingCardsP2();
+
       return;
     }
     if (m_gameMan.bServer)
     {
+      txtSelectCard.SetActive(true);
+      m_gameMan.refRonda.txtIntructionFase.SetActive(false);
+      txtSelectCard.GetComponentInChildren<Text>().text = Traslate.getTxPlaceCard();
       ColorBlock ColorButton1 = buttonCansillerCard1.GetComponent<Button>().colors;
       colorButton(ref ColorButton1, 0);
       buttonCansillerCard1.GetComponent<Button>().colors = ColorButton1;
@@ -291,6 +346,9 @@ public class sesionLegislativa : MonoBehaviour
     }
     else
     {
+      txtSelectCard.SetActive(true);
+      m_gameMan.refRonda.txtIntructionFase.SetActive(false);
+      txtSelectCard.GetComponentInChildren<Text>().text = Traslate.getTxPlaceCard();
       ColorBlock ColorButton1 = buttonCansillerCard1.GetComponent<Button>().colors;
       colorButtonForClient(ref ColorButton1, card0);
       buttonCansillerCard1.GetComponent<Button>().colors = ColorButton1;
@@ -313,12 +371,14 @@ public class sesionLegislativa : MonoBehaviour
   {
     buttonCansillerCard1.SetActive(false);
     buttonCansillerCard2.SetActive(false);
+    txtSelectCard.SetActive(false);//////////////////////////////////////////
   }
 
   public void CansillerEndSelection()
   {
     buttonCansillerCard1.SetActive(false);
     buttonCansillerCard2.SetActive(false);
+    txtSelectCard.SetActive(false);////////////////////////////////////////
     faseAlready = false;
   }
 

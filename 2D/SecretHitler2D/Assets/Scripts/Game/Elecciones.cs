@@ -43,6 +43,8 @@ public class Elecciones : MonoBehaviour
   public GameObject g_BtnNo;
   public GameObject g_BtnNextTurn;
 
+  public GameObject m_textSeleccionarCanciller;
+
   gameManager refGameMan;
   sesionLegislativa refLeg;
 
@@ -75,11 +77,13 @@ public class Elecciones : MonoBehaviour
         break;
 
       case 1:
+        m_textSeleccionarCanciller.SetActive(false);
         PhaseVotation();
         break;
 
       case 2:
         //WaitingNextTurn();
+        refGameMan.refRonda.txtIntructionFase.SetActive(false); /////////////////////
         waitingNextTurn = true;
         break;
 
@@ -104,6 +108,7 @@ public class Elecciones : MonoBehaviour
   {
     if (!g_isPhase && !m_alreadyVote)
     {
+      refGameMan.refRonda.txtIntructionFase.SetActive(false);
       if (refGameMan.bServer)
       {
         refGameMan.refServer.bWaitingGame = true;
@@ -129,6 +134,11 @@ public class Elecciones : MonoBehaviour
       //g_listPlayerVote = new int[g_usuarios];
 
       return;
+    }
+    if (m_alreadyVote)
+    {
+      refGameMan.refRonda.txtIntructionFase.SetActive(true);
+      refGameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtWaitingForVote();
     }
     //Esto se cambiara a cada pantalla
     //g_currentPlayerTxt.GetComponent<Text>().text = "vota por ";
@@ -293,6 +303,12 @@ public class Elecciones : MonoBehaviour
     bool draw = true;
     if (refGameMan.bServer && 0 != g_idPresident)
     {
+      m_textSeleccionarCanciller.SetActive(false);
+      refGameMan.refRonda.txtIntructionFase.SetActive(true);
+      refGameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPickAChancellorP1();
+      refGameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += 
+        refGameMan.g_Players[g_idPresident].GetComponent<Jugador>().Apodo;
+      refGameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtPickAChancellorP2();
       draw = false;
       g_isPhase = true;
       if (refGameMan.bServer && !refGameMan.g_Players[g_idPresident].GetComponent<Jugador>().connected)
@@ -310,6 +326,14 @@ public class Elecciones : MonoBehaviour
     }
     else if (!refGameMan.bServer && refGameMan.idConection != g_idPresident)
     {
+
+      m_textSeleccionarCanciller.SetActive(false);
+      refGameMan.refRonda.txtIntructionFase.SetActive(true);
+      refGameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPickAChancellorP1();
+      refGameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
+        refGameMan.g_Players[g_idPresident].GetComponent<Jugador>().Apodo;
+      refGameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtPickAChancellorP2();
+
       draw = false;
       g_isPhase = true;
     }
@@ -317,9 +341,12 @@ public class Elecciones : MonoBehaviour
 
     if (draw)
     {
+      refGameMan.refRonda.txtIntructionFase.SetActive(false);
       if (!g_isPhase)
       {
         //Tiene que mostrar todos los posibles jugadores a canciller
+        m_textSeleccionarCanciller.SetActive(true);
+        m_textSeleccionarCanciller.GetComponentInChildren<Text>().text = Traslate.getTxtSelectAChancellor();
         for (int i = 0; i < g_usuarios; i++)
         {
           //Solo es color del boton
@@ -357,6 +384,7 @@ public class Elecciones : MonoBehaviour
     //El presidente selecciona el canciller
     if (g_isChancellor)
     {
+      m_textSeleccionarCanciller.SetActive(false);
       g_Players[g_idChancellor].GetComponent<Jugador>().Cargo = 2;
 
       for (int i = 0; i < 10; i++)

@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class gameManager : MonoBehaviour
 {
-  Ronda refRonda;
+  public Ronda refRonda;
   public Server refServer;
   public Client refCliente;
   public bool bServer = true;
