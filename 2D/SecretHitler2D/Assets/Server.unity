@@ -416,7 +416,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1165339575}
-        m_MethodName: goToGame
+        m_MethodName: goToSelectCharacter
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -823,7 +823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &658117732
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2186,6 +2186,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f416bf0c0fd875d489254c677f40e569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  refServer: {fileID: 0}
+  refClient: {fileID: 0}
   readybutton: {fileID: 658117731}
 --- !u!114 &1828462151
 MonoBehaviour:
@@ -2504,6 +2506,16 @@ PrefabInstance:
       propertyPath: m_myApodo
       value: 
       objectReference: {fileID: 1340211293}
+    - target: {fileID: 1080471927944560678, guid: 05e0722cfe8d7a940bd128c1672705f1,
+        type: 3}
+      propertyPath: charcters
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1080471927944560678, guid: 05e0722cfe8d7a940bd128c1672705f1,
+        type: 3}
+      propertyPath: characters
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1080471927944560679, guid: 05e0722cfe8d7a940bd128c1672705f1,
         type: 3}
       propertyPath: m_Name
@@ -2569,5 +2581,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1189112844, guid: 05e0722cfe8d7a940bd128c1672705f1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 05e0722cfe8d7a940bd128c1672705f1, type: 3}

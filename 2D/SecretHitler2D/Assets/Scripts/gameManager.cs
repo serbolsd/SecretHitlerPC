@@ -22,6 +22,7 @@ public class gameManager : MonoBehaviour
 
   public GameObject textTofinal;
   public GameObject buttonToMenu;
+  public GameObject intructionsTxt;
   // Start is called before the first frame update
   void Start()
   {
@@ -163,6 +164,7 @@ public class gameManager : MonoBehaviour
 
   void activeButtonFinished()
   {
+    intructionsTxt.SetActive(false);
     if (liberalWon)
     {
       //textTofinal.GetComponent<Text>().text = "Liberal won";
@@ -173,6 +175,7 @@ public class gameManager : MonoBehaviour
       //textTofinal.GetComponent<Text>().text = "Fascist won";
       textTofinal.GetComponentInChildren<Text>().text = Traslate.getTxtFascistWon();
     }
+
     textTofinal.SetActive(true);
     buttonToMenu.SetActive(true);
   }

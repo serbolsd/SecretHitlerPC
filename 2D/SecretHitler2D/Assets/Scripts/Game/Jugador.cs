@@ -16,4 +16,5 @@ public class Jugador : MonoBehaviour
   public int idAfiliation = -1;//0=liberal 1=Facistas
   public string Apodo = "noname";
   public bool connected = false;
+  public int charaacter = -1;
 }

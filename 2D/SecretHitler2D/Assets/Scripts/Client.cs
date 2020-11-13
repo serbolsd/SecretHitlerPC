@@ -29,6 +29,7 @@ public class Client : MonoBehaviour
   public gameManager refGManaer;
   public bool bContinueGame = false;
   public bool bInGameScene = false;
+  bool bInselectChareacterScene = false;
   public bool wait = false;
   public bool connected = false;
   public bool reconnecting = false;
@@ -42,6 +43,10 @@ public class Client : MonoBehaviour
   public GameObject connectButtom;
   public GameObject ReadyButtom;
   public bool allPlayersRegister;
+
+
+  public characterSelected characters;
+  public string apodo;
 
   public Dictionary<int, string> playerApode = new Dictionary<int, string>();
 
@@ -62,6 +67,31 @@ public class Client : MonoBehaviour
         Debug.Log("DDOS Attack");
       }
       Init();
+    }
+  }
+
+  public void preGameInit()
+  {
+    loadApodo();
+    //characters = FindObjectOfType<characterSelected>();
+  }
+
+  public void selectCharacterInit()
+  {
+    Invoke("sendApodo",0.1f);
+  }
+
+  void sendApodo()
+  {
+    Net_MessageTest apod = new Net_MessageTest();
+    apod.Test = "apodo_";
+    apod.Test += FindObjectOfType<Client>().m_myApodo.text;
+    Debug.Log(apod.Test);
+    SendeServer(apod);
+
+    for (int i = 0; i < 10; i++)
+    {
+      playerApode.Add(i, "N");
     }
   }
 
@@ -118,16 +148,28 @@ public class Client : MonoBehaviour
       ReadyButtom.SetActive(true);
       Debug.Log("connected");
       connected = true;
-      
+
     }
     Debug.Log(string.Format("Puerto{0}", ServerIP));
     severStarted = true;
+    if (!bInGameScene && !bInselectChareacterScene)
+    {
+      goToSelecCharacter();
+    }
+
+  }
+
+  public void goToSelecCharacter()
+  {
+
+    //apodo = FindObjectOfType<Client>().m_myApodo.text;
+    bInselectChareacterScene = true;
+    SceneManager.LoadScene("selectCharacter");
     Net_MessageTest nt = new Net_MessageTest();
     nt.Test = "apodo_";
-    nt.Test += m_myApodo.text;
+    nt.Test += apodo;
     Debug.Log(nt.Test);
     SendeServer(nt);
-
   }
 
   public void Shutdown()
@@ -208,30 +250,151 @@ public class Client : MonoBehaviour
       {
         string[] chek = msg.Test.Split('_');
         int.TryParse(chek[1], out myId);
+        if (bInselectChareacterScene)
+        {
+          //FindObjectOfType<characterSelected>().clientReorganize();
+          FindObjectOfType<SCManager>().reorganize=true;
+          
+        }
       }
       if (msg.Test.Contains("apodo"))
       {
         string[] chek = msg.Test.Split('_');
         if (msg.Test.Contains("apodo0"))
-          playerApode.Add(0,chek[1]);
+          playerApode[0]= chek[1];
         if (msg.Test.Contains("apodo1"))
-          playerApode.Add(1,chek[1]);
+          playerApode[1] = chek[1];
         if (msg.Test.Contains("apodo2"))
-          playerApode.Add(2,chek[1]);
+          playerApode[2] = chek[1];
         if (msg.Test.Contains("apodo3"))
-          playerApode.Add(3,chek[1]);
+          playerApode[3] = chek[1];
         if (msg.Test.Contains("apodo4"))
-          playerApode.Add(4,chek[1]);
+          playerApode[4] = chek[1];
         if (msg.Test.Contains("apodo5"))
-          playerApode.Add(5, chek[1]);
+          playerApode[5] = chek[1];
         if (msg.Test.Contains("apodo6"))
-          playerApode.Add(6, chek[1]);
+          playerApode[6] = chek[1];
         if (msg.Test.Contains("apodo7"))
-          playerApode.Add(7, chek[1]);
+          playerApode[7] = chek[1];
         if (msg.Test.Contains("apodo8"))
-          playerApode.Add(8, chek[1]);
+          playerApode[8] = chek[1];
         if (msg.Test.Contains("apodo9"))
-          playerApode.Add(9, chek[1]);
+          playerApode[9] = chek[1];
+      }
+      if (msg.Test.Contains("P0"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int id;
+        int.TryParse(chek[1], out id);
+        FindObjectOfType<characterSelected>().setSelected(id, 0);
+      }
+      if (msg.Test.Contains("P1"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int id;
+        int.TryParse(chek[1], out id);
+        FindObjectOfType<characterSelected>().setSelected(id, 1);
+      }
+      if (msg.Test.Contains("P2"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int id;
+        int.TryParse(chek[1], out id);
+        FindObjectOfType<characterSelected>().setSelected(id, 2);
+      }
+      if (msg.Test.Contains("P3"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int id;
+        int.TryParse(chek[1], out id);
+        FindObjectOfType<characterSelected>().setSelected(id, 3);
+      }
+      if (msg.Test.Contains("P4"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int id;
+        int.TryParse(chek[1], out id);
+        FindObjectOfType<characterSelected>().setSelected(id, 4);
+      }
+      if (msg.Test.Contains("P5"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int id;
+        int.TryParse(chek[1], out id);
+        FindObjectOfType<characterSelected>().setSelected(id, 5);
+      }
+      if (msg.Test.Contains("P6"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int id;
+        int.TryParse(chek[1], out id);
+        FindObjectOfType<characterSelected>().setSelected(id, 6);
+      }
+      if (msg.Test.Contains("P7"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int id;
+        int.TryParse(chek[1], out id);
+        FindObjectOfType<characterSelected>().setSelected(id, 7);
+      }
+      if (msg.Test.Contains("P8"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int id;
+        int.TryParse(chek[1], out id);
+        FindObjectOfType<characterSelected>().setSelected(id, 8);
+      }
+      if (msg.Test.Contains("P9"))
+      {
+        string[] chek = msg.Test.Split('_');
+        int id;
+        int.TryParse(chek[1], out id);
+        FindObjectOfType<characterSelected>().setSelected(id, 9);
+      }
+      if (msg.Test.Contains("C0"))
+      {
+        FindObjectOfType<characterSelected>().unselecte(0);
+      }
+      if (msg.Test.Contains("C1"))
+      {
+        FindObjectOfType<characterSelected>().unselecte(1);
+      }
+      if (msg.Test.Contains("C2"))
+      {
+        FindObjectOfType<characterSelected>().unselecte(2);
+      }
+      if (msg.Test.Contains("C3"))
+      {
+        FindObjectOfType<characterSelected>().unselecte(3);
+      }
+      if (msg.Test.Contains("C4"))
+      {
+        FindObjectOfType<characterSelected>().unselecte(4);
+      }
+      if (msg.Test.Contains("C5"))
+      {
+        FindObjectOfType<characterSelected>().unselecte(5);
+      }
+      if (msg.Test.Contains("C6"))
+      {
+        FindObjectOfType<characterSelected>().unselecte(6);
+      }
+      if (msg.Test.Contains("C7"))
+      {
+        FindObjectOfType<characterSelected>().unselecte(7);
+      }
+      if (msg.Test.Contains("C8"))
+      {
+        FindObjectOfType<characterSelected>().unselecte(8);
+      }
+      if (msg.Test.Contains("C9"))
+      {
+        FindObjectOfType<characterSelected>().unselecte(9);
+      }
+      if (msg.Test.Contains("yourApodo_"))
+      {
+        string[] chek = msg.Test.Split('_');
+        apodo = chek[1];
       }
       if (msg.Test.Contains("initGame"))
       {
@@ -259,7 +422,7 @@ public class Client : MonoBehaviour
         Net_MessageTest nt = new Net_MessageTest();
         nt.Test = "Okey";
         SendeServer(nt);
-
+        bInselectChareacterScene = false;
         SceneManager.LoadScene("GameServer");
       }
     }
@@ -347,7 +510,7 @@ public class Client : MonoBehaviour
         if (msg.Test.Contains("ap0"))
         {
           refGManaer.g_Players[0].GetComponent<Jugador>().idAfiliation = afil;
-          if (1==m_numPlayers)
+          if (1 == m_numPlayers)
           {
             allPlayersRegister = true;
             FindObjectOfType<SetApodoRo>().onInit();
@@ -830,22 +993,21 @@ public class Client : MonoBehaviour
   }
 
   #endregion
-  public void FormatTestData()
-  {
-    Net_MessageTest nt = new Net_MessageTest();
-    nt.Test = "Hola soy el cliente";
-    Debug.Log(connectionid);
-    SendeServer(nt);
-
-
-  }
 
   public void preGameUpdate()
   {
+    if (m_myApodo.text.Length>=8)
+    {
+      for (int i = m_myApodo.text.Length -1; i > 7; --i)
+      {
+        m_myApodo.text.Remove(i);
+      }
+    }
     string name = m_myApodo.text;
     saveName.savename(ref name);
+    apodo = name;
 
-    if (m_myApodo.text.Length<3 || connected)
+    if (m_myApodo.text.Length < 3)
     {
       connectButtom.GetComponent<Button>().interactable = false;
     }
@@ -853,13 +1015,21 @@ public class Client : MonoBehaviour
     {
       connectButtom.GetComponent<Button>().interactable = true;
     }
-    if(FindObjectOfType<Ready>().ready == 1)
+    if (FindObjectOfType<Ready>().ready == 1)
     {
       ReadyButtom.GetComponent<Button>().interactable = false;
     }
     if (connected)
     {
-      UpdateMEssagePump(); 
+      UpdateMEssagePump();
+    }
+  }
+
+  public void selecCharacterUpdate()
+  {
+    if (connected)
+    {
+      UpdateMEssagePump();
     }
   }
 
@@ -933,8 +1103,8 @@ public class Client : MonoBehaviour
 
   public void disconectedTest()
   {
-    NetworkManager.singleton.client.Disconnect();
-    connected = false;
+    //NetworkConnection.dis;
+    //connected = false;
   }
 
 }

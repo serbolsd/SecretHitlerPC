@@ -39,6 +39,8 @@ public class SessionEjecutiva : MonoBehaviour
   public bool bSeeingMembership = false;
   public bool alredydoit = false;
 
+  float timeIA = 0;
+
   public void onInit()
   {
     refLeg = FindObjectOfType<sesionLegislativa>();
@@ -395,7 +397,6 @@ public class SessionEjecutiva : MonoBehaviour
     {
       if (!bAlredyDrawMembership)
       {
-
         bAlredyDrawMembership = true;
       }
       return;
@@ -404,6 +405,11 @@ public class SessionEjecutiva : MonoBehaviour
     {
       if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
       {
+        if (timeIA < 3.0f)
+        {
+          timeIA += Time.deltaTime;
+        }
+        timeIA = 0;
         OKbutton();
         return;
       }
@@ -468,6 +474,11 @@ public class SessionEjecutiva : MonoBehaviour
     {
       if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
       {
+        if (timeIA < 3.0f)
+        {
+          timeIA += Time.deltaTime;
+        }
+        timeIA = 0;
         int selection = Random.Range(0, refElec.g_usuarios - 1);
         while (selection == refElec.g_idPresident || refman.g_Players[selection].GetComponent<Jugador>().bIsDead)
         {
@@ -570,7 +581,15 @@ public class SessionEjecutiva : MonoBehaviour
     instructionToNoPresident();
     if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
     {
-      OKbutton();
+      if (timeIA>=3.0f)
+      {
+        timeIA = 0;
+        OKbutton();
+      }
+      else
+      {
+        timeIA += Time.deltaTime;
+      }
       return;
     }
 
@@ -689,6 +708,11 @@ public class SessionEjecutiva : MonoBehaviour
     {
       if (refman.bServer && !refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().connected)
       {
+        if(timeIA<3.0f)
+        {
+          timeIA += Time.deltaTime;
+        }
+        timeIA = 0;
         int selection = Random.Range(0, refElec.g_usuarios - 1);
         while (selection == refElec.g_idPresident || refman.g_Players[selection].GetComponent<Jugador>().bIsDead)
         {
@@ -1034,11 +1058,11 @@ public class SessionEjecutiva : MonoBehaviour
     {
       return;
     }
-    refRonda.txtIntructionFase.SetActive(true);
     refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtTakingCardsP1();
     refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
       refman.g_Players[refElec.g_idPresident].GetComponent<Jugador>().Apodo;
     refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtWaitingForPowers();
+    refRonda.txtIntructionFase.SetActive(true);
   }
   void HideInstructionToNoPresident()
   {

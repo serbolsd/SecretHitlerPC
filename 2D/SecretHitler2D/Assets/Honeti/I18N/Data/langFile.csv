@@ -27,4 +27,7 @@ Lang Code	EN	PL	ES	DE	FR	JP
 ^text_IPWhite	IP...	none	IP...	none	none	none
 ^text_NickName	Nickname	none	Apodo	none	none	none
 ^text_NickNameWhite	Nickname...	none	Apodo...	none	none	none
+^text_selectcharacter	Select character	none	Selecciona personaje	none	none	none
+^text_assistance	Assistance	none	Asistencia	none	none	none
+^text_disconnect	Disconnect	none	Desconectar	none	none	none
 ^text_comming	For the next refoem.	none	Para la próxima reforma	none	none	none

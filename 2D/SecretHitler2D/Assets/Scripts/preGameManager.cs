@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class preGameManager : MonoBehaviour
 {
-  Server refServer;
-  Client refClient;
+  public Server refServer;
+  public Client refClient;
   bool bServer = true;
   bool bCanRun = true;
   public GameObject readybutton;
@@ -17,7 +17,7 @@ public class preGameManager : MonoBehaviour
     refServer = FindObjectOfType<Server>();
     if (refServer)
     {
-      refServer.Init();
+      refServer.preGameInit();
     }
     else
     {
@@ -25,7 +25,7 @@ public class preGameManager : MonoBehaviour
       refClient = FindObjectOfType<Client>();
       if (refClient)
       {
-        refClient.loadApodo();
+        refClient.preGameInit();
         //refClient.Init();
       }
       else

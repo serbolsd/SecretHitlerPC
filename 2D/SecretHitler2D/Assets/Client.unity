@@ -2529,6 +2529,11 @@ PrefabInstance:
       propertyPath: ReadyButtom
       value: 
       objectReference: {fileID: 658117731}
+    - target: {fileID: 3077289176481113837, guid: a5ec75922ed197840b91fbe9614fe7e6,
+        type: 3}
+      propertyPath: charcters
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3858951748612351638, guid: a5ec75922ed197840b91fbe9614fe7e6,
         type: 3}
       propertyPath: m_Name
@@ -2794,6 +2799,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f416bf0c0fd875d489254c677f40e569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  refServer: {fileID: 0}
+  refClient: {fileID: 0}
   readybutton: {fileID: 658117731}
 --- !u!114 &1828462151
 MonoBehaviour:

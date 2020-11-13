@@ -31,6 +31,8 @@ public class sesionLegislativa : MonoBehaviour
   public int card1 = -1;
   public int card2 = -1;
 
+  float timeIA = 0;
+
   public void onStart()
   {
     baraja.onStart();
@@ -74,15 +76,23 @@ public class sesionLegislativa : MonoBehaviour
   {
     if (m_gameMan.bServer && !m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().connected)
     {
-      takeCards();
+      if (timeIA>=3.0f)
+      {
+        takeCards();
+        timeIA = 0;
+      }
+      else
+      {
+        timeIA += Time.deltaTime;
+      }
     }
     if (m_gameMan.idConection != m_eleccionsData.g_idPresident)
     {
-      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPickAChancellorP1();
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
         m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().Apodo;
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtTakingCardsP2();
+      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
 
       return;
     }
@@ -183,24 +193,33 @@ public class sesionLegislativa : MonoBehaviour
     if (m_gameMan.bServer && !m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().connected)
     {
       txtSelectCard.SetActive(false);
-      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPickAChancellorP1();
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
         m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().Apodo;
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtDiscardingCards();
-      int slecction = Random.Range(0, 2);
-      switch (slecction)
+      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
+      if (timeIA>=3.0f)
       {
-        case 0:
-          selectCard1();
-          break;
-        case 1:
-          selectCard2();
-          break;
-        case 2:
-          selectCard3();
-          break;
+        int slecction = Random.Range(0, 2);
+        timeIA = 0;
+        switch (slecction)
+        {
+          case 0:
+            selectCard1();
+            break;
+          case 1:
+            selectCard2();
+            break;
+          case 2:
+            selectCard3();
+            break;
+        }
       }
+      else
+      {
+        timeIA += Time.deltaTime;
+      }
+      
     }
     if (alredySelectedCard)
     {
@@ -210,11 +229,11 @@ public class sesionLegislativa : MonoBehaviour
     {
       txtSelectCard.SetActive(false);
 
-      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPickAChancellorP1();
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
         m_gameMan.g_Players[m_eleccionsData.g_idPresident].GetComponent<Jugador>().Apodo;
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtDiscardingCards();
+      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
       return;
     }
 
@@ -290,22 +309,30 @@ public class sesionLegislativa : MonoBehaviour
     {
       txtSelectCard.SetActive(false);
 
-      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPlacingCardsP1();
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
         m_gameMan.g_Players[m_eleccionsData.g_idChancellor].GetComponent<Jugador>().Apodo;
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtPlacingCardsP2();
-
-      int slecction = Random.Range(0, 1);
-      switch (slecction)
+      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
+      if (timeIA >=3.0f)
       {
-        case 0:
-          selectCard1();
-          break;
-        case 1:
-          selectCard2();
-          break;
+        int slecction = Random.Range(0, 1);
+        timeIA = 0;
+        switch (slecction)
+        {
+          case 0:
+            selectCard1();
+            break;
+          case 1:
+            selectCard2();
+            break;
+        }
       }
+      else
+      {
+        timeIA += Time.deltaTime;
+      }
+     
     }
     if (alredySelectedCard)
     {
@@ -315,11 +342,11 @@ public class sesionLegislativa : MonoBehaviour
     {
       txtSelectCard.SetActive(false);
 
-      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text = Traslate.getTxtPlacingCardsP1();
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text +=
         m_gameMan.g_Players[m_eleccionsData.g_idChancellor].GetComponent<Jugador>().Apodo;
       m_gameMan.refRonda.txtIntructionFase.GetComponentInChildren<Text>().text += Traslate.getTxtPlacingCardsP2();
+      m_gameMan.refRonda.txtIntructionFase.SetActive(true);
 
       return;
     }

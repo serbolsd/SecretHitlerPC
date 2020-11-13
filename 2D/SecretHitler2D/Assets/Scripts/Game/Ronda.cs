@@ -160,31 +160,6 @@ public class Ronda : MonoBehaviour
   {
     ++phase;
     return;
-    if (null == m_fEjecutiva || !m_fEjecutiva.poderActivo)
-    {
-      if (refGameMan.bServer)
-      {
-      }
-    }
-    if (!AlreadyInitPhase)
-    {
-      if (m_fEjecutiva.waitingNextTurn)
-      {
-        //si se esta esperando el siguiente turno y hay algo que inicializar se hace aqui
-      }
-      AlreadyInitPhase = true;
-      //m_fElecciones.g_phase = 0;
-      m_fElecciones.waitingNextTurn = false;
-    }
-    m_fElecciones.onUpdate();
-    if (m_fElecciones.waitingNextTurn)
-    {
-      AlreadyInitPhase = false;
-      if (refGameMan.bServer)
-      {
-        ++phase;
-      }
-    }
   }
 
   void ElectionPhase()

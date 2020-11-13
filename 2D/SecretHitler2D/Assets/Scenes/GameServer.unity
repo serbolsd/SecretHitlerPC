@@ -233,6 +233,7 @@ MonoBehaviour:
   gameFinished: 0
   textTofinal: {fileID: 1947414353}
   buttonToMenu: {fileID: 1947414352}
+  intructionsTxt: {fileID: 1947414354}
 --- !u!114 &128578105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -519,6 +520,12 @@ GameObject:
 --- !u!1 &1947414353 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 803344666241163034, guid: 7474cf4398ac4884baf6b0ef88b0c7e2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1947414351}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1947414354 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1426423650, guid: 7474cf4398ac4884baf6b0ef88b0c7e2,
     type: 3}
   m_PrefabInstance: {fileID: 1947414351}
   m_PrefabAsset: {fileID: 0}

@@ -28,27 +28,54 @@ public class Server : MonoBehaviour
   public Dictionary<int, int> playerVoteDic = new Dictionary<int, int>();
   public Dictionary<int, string> playerApode = new Dictionary<int, string>();
 
-  public InputField m_ip;
-  public InputField m_myApodo;
+  public InputField m_ip = null;
+  public InputField m_myApodo = null;
 
-  public sesionLegislativa refSesionLegislativa;
-  public SessionEjecutiva refSesionEjecutiva;
-  public Elecciones refElecciones;
-  public Ronda refRonda;
-  public gameManager refGameMan;
+  public sesionLegislativa refSesionLegislativa=null;
+  public SessionEjecutiva refSesionEjecutiva = null;
+  public Elecciones refElecciones = null;
+  public Ronda refRonda = null;
+  public gameManager refGameMan = null;
   public bool bContinueGame = false;
   public bool bWaitingGame = false;
   bool bInGameScene = false;
+  bool bInselectChareacterScene = false;
   public bool bAllVoted = false;
+  bool newApodo = false;
 
   bool canInitGame = true;
   public GameObject btnAllread;
 
   int rondaFase = 0;
-  int eleccionesFase = 0;
-  int legislativaFase = 0;
+
+
+  public string savedapodo = "";
+  SCManager scman;
+  public characterSelected characters;
+
   #region Monobehaviour
   #endregion
+
+  public void selectCharacterInit()
+  {
+    characters = FindObjectOfType<characterSelected>();
+    characters.setApodo(0, savedapodo);
+    scman = FindObjectOfType<SCManager>();
+    //scman.characters.setApodo(0,savedapodo);
+  }
+
+  public void preGameInit()
+  {
+    string ipv4 = IPManager.GetIP(ADDRESSFAM.IPv4);
+    //string ipv6 = IPManager.GetIP(ADDRESSFAM.IPv6);
+    m_ip.text = ipv4;
+
+    if (saveName.loadName(ref savedapodo))
+    {
+      m_myApodo.text = savedapodo;
+    }
+  }
+
   public void Init()
   {
     DontDestroyOnLoad(gameObject);
@@ -64,18 +91,8 @@ public class Server : MonoBehaviour
     WebHostID = NetworkTransport.AddWebsocketHost(top, Web, null);
     Debug.Log(string.Format("Puerto{0} y webport{1}", Web, Port));
     severStarted = true;
-    string ipv4 = IPManager.GetIP(ADDRESSFAM.IPv4);
-    //string ipv6 = IPManager.GetIP(ADDRESSFAM.IPv6);
-    m_ip.text = ipv4;
-    string savedapodo="";
-
-    if (saveName.loadName(ref savedapodo))
-    {
-      m_myApodo.text = savedapodo;
-    }
-
-
   }
+
   public void Shutdown()
   {
     severStarted = false;
@@ -88,7 +105,7 @@ public class Server : MonoBehaviour
     int id = 0;
     for (int i = 0; i < conections.Count; i++)
     {
-      if (playerId[conections[i]] != id)
+      if (playerId[i] != id)
       {
         return id;
       }
@@ -100,13 +117,34 @@ public class Server : MonoBehaviour
   void reorganizeIdPlayers()
   {
     int id = 0;
+    
     for (int i = 0; i < conections.Count; i++)
     {
+      if (playerId[conections[i]] == id)
+      {
+        id++;
+        continue;
+      }
+      int ready = playerRedyDic[playerId[conections[i]]];
+      playerRedyDic.Remove(playerId[conections[i]]);
+      int vote = playerVoteDic[playerId[conections[i]]];
+      playerVoteDic.Remove(playerId[conections[i]]);
+      string apode = playerApode[playerId[conections[i]]];
+      playerApode.Remove(playerId[conections[i]]);
+
       playerId[conections[i]] = id;
       id++;
+
+      playerRedyDic.Add(playerId[conections[i]], ready);
+      playerVoteDic.Add(playerId[conections[i]], vote);
+      playerApode.Add(playerId[conections[i]], apode);
+    }
+    sendApodos();
+    for (int i = 0; i < conections.Count; i++)
+    {
       Net_MessageTest nt = new Net_MessageTest();
       nt.Test = "yourid_";
-      nt.Test += id;
+      nt.Test += playerId[conections[i]];
       SendClient(conections[i], nt);
     }
   }
@@ -159,7 +197,14 @@ public class Server : MonoBehaviour
           playerVoteDic.Remove(idToRemove);
           playerApode.Remove(idToRemove);
           Debug.Log(playerRedyDic.Count);
+          if (bInselectChareacterScene)
+          {
+            characters.desconectPlayer(idToRemove);
+          }
           reorganizeIdPlayers();
+          if (bInselectChareacterScene)
+            characters.reorganize(); 
+          newApodo = true;
         }
         else
         {
@@ -217,8 +262,68 @@ public class Server : MonoBehaviour
       if (msg.Test.Contains("apodo"))
       {
         string[] chek = msg.Test.Split('_');
+        int num = 1;
+        for (int i = 0; i < playerApode.Count; i++)
+        {
+          if (playerApode[i]== chek[1])
+          {
+            chek[1] += num.ToString();
+            num++;
+            i = 0;
+          }
+        }
         playerApode[playerId[connectionId]] = chek[1];
+        characters.setApodo(playerId[connectionId], chek[1]);
+        Net_MessageTest nt = new Net_MessageTest();
+        nt.Test = "yourApodo_";
+        nt.Test += chek[1];
+        SendClient(connectionId, nt);
+        newApodo = true;
       }
+      if (msg.Test.Contains("c0"))
+      {
+        FindObjectOfType<characterSelected>().selectCharac(0, playerId[connectionId]);
+      }
+      if (msg.Test.Contains("c1"))
+      {
+        FindObjectOfType<characterSelected>().selectCharac(1, playerId[connectionId]);
+      }
+      if (msg.Test.Contains("c2"))
+      {
+        FindObjectOfType<characterSelected>().selectCharac(2, playerId[connectionId]);
+      }
+      if (msg.Test.Contains("c3"))
+      {
+        FindObjectOfType<characterSelected>().selectCharac(3, playerId[connectionId]);
+      }
+      if (msg.Test.Contains("c4"))
+      {
+        FindObjectOfType<characterSelected>().selectCharac(4, playerId[connectionId]);
+      }
+      if (msg.Test.Contains("c5"))
+      {
+        FindObjectOfType<characterSelected>().selectCharac(5, playerId[connectionId]);
+      }
+      if (msg.Test.Contains("c6"))
+      {
+        FindObjectOfType<characterSelected>().selectCharac(6, playerId[connectionId]);
+      }
+      if (msg.Test.Contains("c7"))
+      {
+        FindObjectOfType<characterSelected>().selectCharac(7, playerId[connectionId]);
+      }
+      if (msg.Test.Contains("c8"))
+      {
+        FindObjectOfType<characterSelected>().selectCharac(8, playerId[connectionId]);
+      }
+      if (msg.Test.Contains("c9"))
+      {
+        FindObjectOfType<characterSelected>().selectCharac(9, playerId[connectionId]);
+      }
+    }
+    else if(bInselectChareacterScene)
+    {
+     
     }
     else
     {
@@ -553,9 +658,9 @@ public class Server : MonoBehaviour
     }
 
   }
+
   public void SendClient(int connwctioID, NetMeg msg)
   {
-
     byte[] buffer = new byte[BYTE_SIZE];
     buffer[0] = 255;
     BinaryFormatter formatter = new BinaryFormatter();
@@ -564,31 +669,23 @@ public class Server : MonoBehaviour
     NetworkTransport.Send(HostId, connwctioID, ReliableChannel, buffer, BYTE_SIZE, out error);
 
   }
-  public void FormatTestDataS()
-  {
-    Net_MessageTest nt = new Net_MessageTest();
-    nt.Test = "Hola soy el server";
-    nt.Test += 1;
-    for (int i = 0; i < conections.Count; i++)
-    {
-      if (i != HostId)
-      {
-        Debug.Log(conections[i]);
-        SendClient(conections[i], nt);
-      }
-    }
-  }
 
-  public void goToGame()
+  public void sendApodos()
   {
-    bInGameScene = true;
-    for (int i = 0; i < playerApode.Count; i++)
+    for (int i = 0; i < 10; i++)
     {
       Net_MessageTest apode = new Net_MessageTest();
       apode.Test = "apodo";
       apode.Test += i;
       apode.Test += "_";
-      apode.Test += playerApode[i];
+      if (i<playerApode.Count )
+      {
+        apode.Test += playerApode[i];
+      }
+      else
+      {
+        apode.Test += "N";
+      }
       for (int j = 0; j < conections.Count; j++)
       {
         if (j != HostId)
@@ -598,8 +695,35 @@ public class Server : MonoBehaviour
         }
       }
     }
-    
+  }
 
+  public void sentToDiscconect()
+  {
+    Net_MessageTest dis = new Net_MessageTest();
+    dis.Test = "dt";
+    for (int j = 0; j < conections.Count; j++)
+    {
+      if (j != HostId)
+      {
+        Debug.Log(conections[j]);
+        SendClient(conections[j], dis);
+      }
+    }
+  }
+
+  public void goToSelectCharacter()
+  {
+    bInselectChareacterScene = true;
+    //characters.setApodo(0, m_myApodo.text);
+    Init();
+    SceneManager.LoadScene("selectCharacter");
+  }
+
+  public void goToGame()
+  {
+    bInGameScene = true;
+    bInselectChareacterScene = false;
+    sendApodos();
     Net_MessageTest nt = new Net_MessageTest();
     nt.Test = "initGame: ";
     nt.Test += conections.Count;
@@ -626,13 +750,20 @@ public class Server : MonoBehaviour
 
   public void preGameUpdate()
   {
-    UpdateMEssagePump();
+    //
     canInitGame = true;
-
+    if (m_myApodo.text.Length >= 8)
+    {
+      for (int i = m_myApodo.text.Length - 1; i > 7; --i)
+      {
+        m_myApodo.text.Remove(i);
+      }
+    }
     string name = m_myApodo.text;
     saveName.savename(ref name);
+    savedapodo = name;
 
-    if (m_myApodo.text.Length<3)
+    if (m_myApodo.text.Length < 3)
     {
       GetComponent<Ready>().readybutton.GetComponent<Button>().interactable = false;
     }
@@ -641,6 +772,21 @@ public class Server : MonoBehaviour
       playerApode[0] = m_myApodo.text;
       GetComponent<Ready>().readybutton.GetComponent<Button>().interactable = true;
     }
+    if (!bInGameScene)
+    {
+      //if (canInitGame)
+      //{
+      //  btnAllread.SetActive(true);
+      //}
+      //else
+      //  btnAllread.SetActive(false);
+    }
+  }
+
+  public void selectCharacterUpdate()
+  {
+    canInitGame = true;
+    UpdateMEssagePump();
     for (int i = 0; i < playerRedyDic.Count; i++)
     {
       if (playerRedyDic[conections[i]] != 1)
@@ -649,15 +795,57 @@ public class Server : MonoBehaviour
         break;
       }
     }
-    if (!bInGameScene)
+    if (newApodo)
     {
-      if (canInitGame)
+      sendApodos();
+      if (bInselectChareacterScene)
       {
-        btnAllread.SetActive(true);
+        FindObjectOfType<characterSelected>().sendCharacters();
       }
-      else
-        btnAllread.SetActive(false);
+      newApodo = false; ;
     }
+  }
+
+  public void lobbyUpdate()
+  {
+    return;
+  }
+
+  public void gameUpdate()
+  {
+    rondaFase = refRonda.phase;
+    UpdateMEssagePump();
+    if (!bContinueGame)
+    {
+      for (int i = 0; i < playerRedyDic.Count; i++)
+      {
+        if (!refGameMan.g_Players[conections[i]].GetComponent<Jugador>().connected)
+        {
+          playerRedyDic[conections[i]] = 1;
+        }
+        if (0 == playerRedyDic[conections[i]])
+        {
+          return;
+        }
+      }
+      bContinueGame = true;
+      Net_MessageTest nt = new Net_MessageTest();
+      nt.Test = "continue ";
+      Debug.Log(nt.Test);
+
+    }
+    if (1 == refElecciones.g_phase)
+    {
+      bAllVoted = true;
+      for (int i = 0; i < playerVoteDic.Count; i++)
+      {
+        if (0 == playerVoteDic[conections[i]])
+        {
+          bAllVoted = false;
+        }
+      }
+    }
+    //checkForContinueGame(); 
   }
 
   public void onStartGame()
@@ -744,41 +932,9 @@ public class Server : MonoBehaviour
     return false;
   }
 
-  public void gameUpdate()
+  public void sentInfoWhitDelay()
   {
-    rondaFase = refRonda.phase;
-    UpdateMEssagePump();
-    if (!bContinueGame)
-    {
-      for (int i = 0; i < playerRedyDic.Count; i++)
-      {
-        if (!refGameMan.g_Players[conections[i]].GetComponent<Jugador>().connected)
-        {
-          playerRedyDic[conections[i]] = 1;
-        }
-        if (0 == playerRedyDic[conections[i]])
-        {
-          return;
-        }
-      }
-      bContinueGame = true;
-      Net_MessageTest nt = new Net_MessageTest();
-      nt.Test = "continue ";
-      Debug.Log(nt.Test);
-
-    }
-    if (1 == refElecciones.g_phase)
-    {
-      bAllVoted = true;
-      for (int i = 0; i < playerVoteDic.Count; i++)
-      {
-        if (0 == playerVoteDic[conections[i]])
-        {
-          bAllVoted = false;
-        }
-      }
-    }
-    //checkForContinueGame(); 
+    Invoke("sentInfoGame",0.1f);
   }
 
   public void sentInfoGame()
